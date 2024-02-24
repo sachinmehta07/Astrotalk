@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">Astrotalk</string>
+    <string name="register">Register</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="underline_skip"><u>Skip</u></string>
+    <string name="no_internet_connection_found_ncheck_your_connection">No Internet\n</string>
+    <string name="no_result">No Result</string>
+    <string name="vedic_astrology">Vedic Astrologers</string>
+    <string name="prasna_shastra_astrologers">Career Astrologers</string>
+    <string name="tajika">Marriage  Astrologers</string>
+    <string name="call">Call</string>
+    <string name="chat">Chat</string>
+    <string name="love_astrology">Love Astrology</string>
+    <string name="todo">TODO</string>
+</resources>

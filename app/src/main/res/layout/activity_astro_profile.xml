@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:id="@+id/action_bar"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/Back_Iv"
+            android:layout_width="@dimen/_30sdp"
+            android:layout_height="@dimen/_30sdp"
+            android:padding="@dimen/_8sdp"
+            android:layout_marginStart="@dimen/_8sdp"
+            android:src="@drawable/back"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/ivSideMenu"
+            android:layout_width="@dimen/_30sdp"
+            android:layout_height="@dimen/_30sdp"
+            android:layout_marginStart="@dimen/_8sdp"
+            android:padding="@dimen/_4sdp"
+
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <TextView
+            android:id="@+id/txtActionBarTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:fontFamily="@font/poppins_bold"
+            android:gravity="center"
+            android:text="Profile"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_12ssp"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/Back_Iv"
+            app:layout_constraintBottom_toBottomOf="@id/Back_Iv"/>
+
+        <TextView
+            android:id="@+id/txPackName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/poppins_semibold"
+            android:textSize="@dimen/_9ssp"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="@+id/txtActionBarTitle"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/txtActionBarTitle"
+            app:layout_constraintTop_toBottomOf="@+id/txtActionBarTitle"
+            tools:text="Pack Name" />
+
+        <ImageView
+            android:id="@+id/ivDone"
+            android:layout_width="@dimen/_30sdp"
+            android:layout_height="@dimen/_30sdp"
+            android:padding="@dimen/_8sdp"
+            android:visibility="invisible"
+            android:layout_margin="@dimen/_10sdp"
+            android:layout_marginEnd="@dimen/_8sdp"
+            app:layout_constraintBottom_toBottomOf="@+id/Back_Iv"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/Back_Iv" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <!-- Profile Card View -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardView"
+        android:layout_below="@+id/action_bar"
+        android:padding="@dimen/_10sdp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp">
+
+            <!-- Astrologer Profile Pic -->
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cvUserPic"
+                android:layout_width="@dimen/_70sdp"
+                android:layout_height="@dimen/_70sdp"
+                app:cardCornerRadius="@dimen/_20sdp"
+                android:layout_marginEnd="@dimen/_5sdp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:id="@+id/ivProfile"
+                    android:layout_width="@dimen/_70sdp"
+                    android:layout_height="@dimen/_70sdp"
+                    android:padding="0dp"
+                    android:background="@color/app_theme"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/ic_profile" />
+
+            </androidx.cardview.widget.CardView>
+
+
+
+            <!-- Astrologer Details -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/cvUserPic"
+                android:layout_alignBottom="@+id/cvUserPic"
+                android:layout_marginStart="@dimen/_5sdp"
+                android:layout_toEndOf="@id/cvUserPic"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/txtName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_bold"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_12ssp"
+                    tools:text="Name: Sachin Mehta" />
+
+                <TextView
+                    android:id="@+id/txtAstroType"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_regular"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_10ssp"
+                    tools:text="Astrology Type: Vedic Astrologer" />
+
+                <TextView
+                    android:id="@+id/txtExp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_regular"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_10ssp"
+                    tools:text="Experience: 7 Years" />
+
+                <TextView
+                    android:id="@+id/txtLang"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_regular"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_10ssp"
+                    tools:text="Language: Hindi" />
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <!-- About Astrology Section -->
+    <TextView
+        android:id="@+id/txtAbout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/poppins_regular"
+        android:layout_below="@+id/cardView"
+        android:textColor="@color/black"
+        android:padding="@dimen/_10sdp"
+        tools:text="About Astrology: [Add your 50-word description here]"
+        android:textSize="@dimen/_13ssp" />
+
+    <!-- Chat and Call Buttons -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/txtAbout"
+        android:layout_marginTop="16dp"
+        android:orientation="horizontal">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnChat"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_margin="@dimen/_15sdp"
+            android:background="@drawable/btnbg"
+            android:fontFamily="@font/poppins_bold"
+            android:textSize="@dimen/_13ssp"
+            android:paddingHorizontal="@dimen/_10sdp"
+            android:drawableStart="@drawable/ic_chat"
+            android:textAllCaps="false"
+            android:layout_weight="1"
+            android:text="@string/chat" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnCall"
+            android:layout_width="0dp"
+            android:textAllCaps="false"
+            android:fontFamily="@font/poppins_bold"
+            android:textSize="@dimen/_13ssp"
+            android:paddingHorizontal="@dimen/_10sdp"
+            android:layout_margin="@dimen/_15sdp"
+            android:drawableStart="@drawable/ic_call"
+            android:background="@drawable/btnbg"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/call" />
+
+    </LinearLayout>
+
+</RelativeLayout>

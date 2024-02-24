@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "882570235951",
+    "project_id": "astrotalk-d5d4d",
+    "storage_bucket": "astrotalk-d5d4d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:882570235951:android:583f0676fcaf4641cab6da",
+        "android_client_info": {
+          "package_name": "com.app.astrotalk"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDgS4oX9ldeBNBM_uIywotxtbk9WjCG8OA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
