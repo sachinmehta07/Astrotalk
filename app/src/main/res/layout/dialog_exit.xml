@@ -1,0 +1,51 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/dialog_bg"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/text_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Are you sure you want to exit?"
+        android:textSize="@dimen/_13ssp"
+        android:background="@drawable/dialog_bg"
+        android:fontFamily="@font/poppins_regular"
+        android:textColor="@android:color/black"
+        android:textStyle="bold"
+        android:gravity="center"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="@dimen/_15sdp"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/btn_yes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Yes"
+            android:layout_marginEnd="@dimen/_15sdp"
+            android:textSize="@dimen/_10ssp"
+            android:fontFamily="@font/poppins_bold"
+            android:textColor="@android:color/black"
+            android:background="@drawable/btnbg"/>
+
+        <Button
+            android:id="@+id/btn_no"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="No"
+            android:layout_marginStart="@dimen/_15sdp"
+            android:textSize="@dimen/_10ssp"
+            android:fontFamily="@font/poppins_bold"
+            android:textColor="@android:color/black"
+            android:background="@drawable/btnbg"/>
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -2,6 +2,11 @@ package com.app.astrotalk.fragmments;
 
 import static android.view.View.GONE;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -12,7 +17,10 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+
 
 import com.app.astrotalk.R;
 import com.app.astrotalk.activity.DashboardActivity;
@@ -28,10 +36,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CallFragment extends Fragment {
-
     private FragmentCallBinding binding;
+    private static final int REQUEST_CALL_PHONE_PERMISSION = 1;
     private CallProfileAdapter userProfileAdapter;
+    private final String phoneNumber = "8320577653";
     List<AllCategory> allUserBase = new ArrayList<>();
+    private static final int REQUEST_CALL_PERMISSION = 1;
 
     public CallFragment() {
         // Required empty public constructor
@@ -51,6 +61,13 @@ public class CallFragment extends Fragment {
                 ((DashboardActivity) requireActivity()).drawerOpen();
             }
         });
+        binding.ivRemove.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                binding.edSearch.setText("");
+                binding.ivRemove.setVisibility(View.INVISIBLE);
+            }
+        });
         // You can now use 'ivMenu' directly for menu click handling
 
         return view;
@@ -61,6 +78,32 @@ public class CallFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         setData();
         initialization();
+    }
+
+    @SuppressLint("QueryPermissionsNeeded")
+    private void initiateCall(String phoneNumber) {
+        Intent dialIntent = new Intent(Intent.ACTION_DIAL);
+        dialIntent.setData(Uri.parse("tel:" + phoneNumber));
+
+        if (dialIntent.resolveActivity(requireActivity().getPackageManager()) != null) {
+            startActivity(dialIntent);
+        } else {
+            // Handle the case where the dialer app is not available.
+            // You may want to show a message to the user.
+        }
+    }
+
+    private void makePhoneCall(String phoneNumber) {
+        if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.CALL_PHONE)
+                != PackageManager.PERMISSION_GRANTED) {
+            // Permission is not granted, request it
+            ActivityCompat.requestPermissions(requireActivity(),
+                    new String[]{Manifest.permission.CALL_PHONE},
+                    REQUEST_CALL_PHONE_PERMISSION);
+        } else {
+            // Permission is already granted, make the phone call
+            initiateCall(phoneNumber);
+        }
     }
 
     private void initialization() {
@@ -101,45 +144,51 @@ public class CallFragment extends Fragment {
 
         userProfileAdapter = new CallProfileAdapter(requireActivity());
         userProfileAdapter.setData(allUserBase, new OnCategoryItemClick() {
+            @SuppressLint("QueryPermissionsNeeded")
             @Override
             public void onItemClick(int position, AllCategory astrologer) {
+                if (requireActivity().checkSelfPermission(Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
+                    // Permission is granted, proceed with the call
+                    Intent callIntent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + phoneNumber));
+                    startActivity(callIntent);
+                } else {
+                    // Request permission if not granted
+                    requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, REQUEST_CALL_PERMISSION);
+                }
 
             }
         });
         binding.rvUsersChat.setAdapter(userProfileAdapter);
     }
 
-    public void setData() {
 
-        allUserBase.add(new AllCategory(1, "Harsh", R.drawable.astro_1, "Vedic Astrologer", "5 years of experience", "Hindi, English", "Specialized in career and relationships"));
-        allUserBase.add(new AllCategory(2, "Rahul", R.drawable.astro_2, "Vedic Astrologer", "8 years of experience", "Sanskrit, Hindi", "Expert in predictive astrology"));
-        allUserBase.add(new AllCategory(3, "Sneha", R.drawable.astro_f_1, "Vedic Astrologer", "6 years of experience", "English, Tamil", "Specialized in health predictions"));
-        allUserBase.add(new AllCategory(4, "Kiran", R.drawable.astro_3, "Vedic Astrologer", "7 years of experience", "Gujarati, Hindi", "Expert in financial astrology"));
-        allUserBase.add(new AllCategory(5, "Arjun", R.drawable.astro_4, "Vedic Astrologer", "4 years of experience", "English, Kannada", "Specialized in gemstone recommendations"));
-        allUserBase.add(new AllCategory(6, "Sachin", R.drawable.astro_5, "Vedic Astrologer", "4 years of experience", "English, Kannada", "Specialized in gemstone recommendations"));
-        allUserBase.add(new AllCategory(7, "Darshan", R.drawable.astro_6, "Vedic Astrologer", "4 years of experience", "English, Kannada", "Specialized in gemstone recommendations"));
-        allUserBase.add(new AllCategory(8, "Neha", R.drawable.astro_f_2, "Vedic Astrologer", "9 years of experience", "Hindi, Punjabi", "Expert in spiritual guidance"));
+    public void setData() {
 
 
         allUserBase.add(new AllCategory(1, "Jay", R.drawable.astro_c_4, "Career Astrologer", "6 years of experience", "English, Marathi", "Expert in career counseling and growth predictions"));
         allUserBase.add(new AllCategory(2, "Amit", R.drawable.astro_c_1, "Career Astrologer", "4 years of experience", "Hindi, English", "Specialized in job change predictions"));
         allUserBase.add(new AllCategory(3, "Priyanka", R.drawable.astro_f_c_7, "Career Astrologer", "7 years of experience", "Gujarati, English", "Expert in business and entrepreneurship predictions"));
         allUserBase.add(new AllCategory(4, "Raj", R.drawable.astro_c_5, "Career Astrologer", "5 years of experience", "Hindi, Tamil", "Specialized in leadership and management guidance"));
+        allUserBase.add(new AllCategory(1, "Manoj", R.drawable.astro_m_1, "Marriage Astrologer", "7 years of experience", "Gujarati, Hindi", "Expert in match-making and compatibility analysis"));
+        allUserBase.add(new AllCategory(2, "Sandeep", R.drawable.astro_m_2, "Marriage Astrologer", "5 years of experience", "English, Punjabi", "Specialized in love marriage predictions"));
+        allUserBase.add(new AllCategory(3, "Deepa", R.drawable.astro_m_3, "Marriage Astrologer", "6 years of experience", "Hindi, Marathi", "Expert in family and relationship counseling"));
+        allUserBase.add(new AllCategory(1, "Harsh", R.drawable.astro_1, "Vedic Astrologer", "5 years of experience", "Hindi, English", "Specialized in career and relationships"));
+        allUserBase.add(new AllCategory(2, "Rahul", R.drawable.astro_2, "Vedic Astrologer", "8 years of experience", "Sanskrit, Hindi", "Expert in predictive astrology"));
+        allUserBase.add(new AllCategory(3, "Sneha", R.drawable.astro_f_1, "Vedic Astrologer", "6 years of experience", "English, Tamil", "Specialized in health predictions"));
         allUserBase.add(new AllCategory(5, "Seema", R.drawable.astro_f_c_6, "Career Astrologer", "8 years of experience", "English, Telugu", "Expert in skill development predictions"));
         allUserBase.add(new AllCategory(6, "Sita", R.drawable.astro_f_3, "Career Astrologer", "3 years of experience", "Hindi, Kannada", "Specialized in education and academic predictions"));
         allUserBase.add(new AllCategory(7, "Sayam", R.drawable.atstro_c_2, "Career Astrologer", "3 years of experience", "Hindi, Kannada", "Specialized in education and academic predictions"));
         allUserBase.add(new AllCategory(8, "Pooja", R.drawable.astro_f_c_8, "Career Astrologer", "3 years of experience", "Hindi, Kannada", "Specialized in education and academic predictions"));
-
-
-        allUserBase.add(new AllCategory(1, "Manoj", R.drawable.astro_m_1, "Marriage Astrologer", "7 years of experience", "Gujarati, Hindi", "Expert in match-making and compatibility analysis"));
-        allUserBase.add(new AllCategory(2, "Sandeep", R.drawable.astro_m_2, "Marriage Astrologer", "5 years of experience", "English, Punjabi", "Specialized in love marriage predictions"));
-        allUserBase.add(new AllCategory(3, "Deepa", R.drawable.astro_m_3, "Marriage Astrologer", "6 years of experience", "Hindi, Marathi", "Expert in family and relationship counseling"));
+        allUserBase.add(new AllCategory(4, "Kiran", R.drawable.astro_3, "Vedic Astrologer", "7 years of experience", "Gujarati, Hindi", "Expert in financial astrology"));
+        allUserBase.add(new AllCategory(5, "Arjun", R.drawable.astro_4, "Vedic Astrologer", "4 years of experience", "English, Kannada", "Specialized in gemstone recommendations"));
+        allUserBase.add(new AllCategory(6, "Sachin", R.drawable.astro_5, "Vedic Astrologer", "4 years of experience", "English, Kannada", "Specialized in gemstone recommendations"));
+        allUserBase.add(new AllCategory(7, "Darshan", R.drawable.astro_6, "Vedic Astrologer", "4 years of experience", "English, Kannada", "Specialized in gemstone recommendations"));
+        allUserBase.add(new AllCategory(8, "Neha", R.drawable.astro_f_2, "Vedic Astrologer", "9 years of experience", "Hindi, Punjabi", "Expert in spiritual guidance"));
         allUserBase.add(new AllCategory(4, "Rahul", R.drawable.astro_m_4, "Marriage Astrologer", "8 years of experience", "English, Kannada", "Specialized in post-marriage guidance"));
         allUserBase.add(new AllCategory(5, "Pooja", R.drawable.astro_m_f_7, "Marriage Astrologer", "4 years of experience", "Gujarati, Hindi", "Expert in resolving marital conflicts"));
         allUserBase.add(new AllCategory(6, "Arun", R.drawable.astro_m_5, "Marriage Astrologer", "9 years of experience", "Hindi, Tamil", "Specialized in Kundli matching"));
         allUserBase.add(new AllCategory(7, "Arun", R.drawable.astro_m_6, "Marriage Astrologer", "9 years of experience", "Hindi, Tamil", "Specialized in Kundli matching"));
         allUserBase.add(new AllCategory(8, "Jinal", R.drawable.astro_m_f_8, "Marriage Astrologer", "9 years of experience", "Hindi, Tamil", "Specialized in Kundli matching"));
-
         allUserBase.add(new AllCategory(1, "Love", R.drawable.astro_l_1, "Love Astrologer", "4 years of experience", "Hindi, English", "Expert in love life guidance"));
         allUserBase.add(new AllCategory(2, "Vikram", R.drawable.astro_l_2, "Love Astrologer", "6 years of experience", "Telugu, English", "Specialized in relationship compatibility"));
         allUserBase.add(new AllCategory(3, "Suman", R.drawable.astro_l_3, "Love Astrologer", "5 years of experience", "Hindi, Marathi", "Expert in resolving love conflicts"));
@@ -150,6 +199,22 @@ public class CallFragment extends Fragment {
         allUserBase.add(new AllCategory(6, "Isha", R.drawable.astro_l_f_8, "Love Astrologer", "8 years of experience", "Gujarati, English", "Specialized in love and romance predictions"));
 
     }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_CALL_PERMISSION) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission granted after request, make the call
+                Intent callIntent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + phoneNumber));
+                startActivity(callIntent);
+            } else {
+                // Handle permission denied case
+                Toast.makeText(requireActivity(), "Denied", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
 
     @Override
     public void onDestroyView() {

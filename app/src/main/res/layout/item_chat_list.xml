@@ -97,8 +97,8 @@
 
 
             <androidx.appcompat.widget.AppCompatButton
-                android:layout_width="@dimen/_50sdp"
-                android:layout_height="@dimen/_30sdp"
+                android:layout_width="@dimen/_45sdp"
+                android:layout_height="@dimen/_25sdp"
                 android:layout_alignTop="@+id/linearLayout"
                 android:layout_alignBottom="@+id/linearLayout"
                 android:layout_marginStart="@dimen/_10sdp"
@@ -110,7 +110,7 @@
                 android:text="Chat"
                 android:id="@+id/btnChat"
                 android:textAllCaps="false"
-                android:textSize="@dimen/_12ssp" />
+                android:textSize="@dimen/_10ssp" />
 
 
         </RelativeLayout>

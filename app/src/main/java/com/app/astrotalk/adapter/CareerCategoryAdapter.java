@@ -19,7 +19,6 @@ import java.util.Locale;
 
 public class CareerCategoryAdapter extends RecyclerView.Adapter<CareerCategoryAdapter.ViewHolder> {
     private Context context;
-
     public List<AllCategory> homeList = new ArrayList<>();
     public List<AllCategory> filterList = new ArrayList<>();
 

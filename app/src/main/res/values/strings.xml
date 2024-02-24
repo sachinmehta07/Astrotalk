@@ -14,4 +14,5 @@
     <string name="chat">Chat</string>
     <string name="love_astrology">Love Astrology</string>
     <string name="todo">TODO</string>
+    <string name="write_message_here">Write message here</string>
 </resources>

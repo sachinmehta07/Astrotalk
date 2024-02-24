@@ -6,4 +6,14 @@
     <color name="c_FFFAFAFB">#FFFAFAFB</color>
     <color name="c_FF000000">#FF000000</color>
     <color name="c_F5F5F5">#F5F5F5</color>
+
+    <color name="my_primary">#FF5964</color>
+    <color name="my_secondary">#FFE74C</color>
+
+
+    <color name="off_white">#FAFAFA</color>
+    <color name="light_gray">#C3C3C3</color>
+
+    <color name="chat_color_sender">#1E88E5</color>
+    <color name="chat_color_receiver">#7CB342</color>
 </resources>

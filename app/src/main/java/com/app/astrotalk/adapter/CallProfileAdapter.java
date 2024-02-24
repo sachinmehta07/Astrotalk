@@ -45,7 +45,7 @@ public class CallProfileAdapter extends RecyclerView.Adapter<CallProfileAdapter.
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_chat_list, parent, false);
+                .inflate(R.layout.item_call_list, parent, false);
         return new ViewHolder(view);
     }
 

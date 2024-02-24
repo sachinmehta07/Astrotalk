@@ -9,6 +9,8 @@ public class AllCategory {
 
     String astroAbout;
 
+
+
     public AllCategory(Integer id, String name, int imageD, String astroType, String astroExp, String astroLang, String astroAbout) {
         this.id = id;
         this.name = name;

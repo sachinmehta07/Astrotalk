@@ -1,18 +1,25 @@
 package com.app.astrotalk.activity;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.Manifest;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.app.astrotalk.R;
 
 public class ProfileActivity extends AppCompatActivity {
-
+    private final String phoneNumber = "8320577653";
+    private static final int REQUEST_CALL_PERMISSION = 1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,6 +29,32 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 onBackPressed();
+            }
+        });
+
+        findViewById(R.id.btnChat).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent iNxt = new Intent(ProfileActivity.this, ChatToAstroActivity.class);
+                iNxt.putExtra("profilePicUrl", getIntent().getIntExtra("profilePicUrl",0));
+                iNxt.putExtra("name", getIntent().getStringExtra("name"));
+                startActivity(iNxt);
+            }
+        });
+
+        findViewById(R.id.btnCall).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Check for Android 6.0 or higher
+                // Check for call permission
+                if (checkSelfPermission(Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
+                    // Permission is granted, proceed with the call
+                    Intent callIntent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + phoneNumber));
+                    startActivity(callIntent);
+                } else {
+                    // Request permission if not granted
+                    requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, REQUEST_CALL_PERMISSION);
+                }
             }
         });
 
@@ -68,5 +101,19 @@ public class ProfileActivity extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         finish();
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_CALL_PERMISSION) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission granted after request, make the call
+                Intent callIntent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + phoneNumber));
+                startActivity(callIntent);
+            } else {
+                // Handle permission denied case
+                Toast.makeText(this, "Denied", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }

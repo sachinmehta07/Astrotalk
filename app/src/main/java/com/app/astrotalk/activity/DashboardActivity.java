@@ -1,6 +1,7 @@
 package com.app.astrotalk.activity;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
@@ -10,9 +11,12 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -36,6 +40,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class DashboardActivity extends AppCompatActivity {
     FirebaseAuth auth;
@@ -166,26 +171,19 @@ public class DashboardActivity extends AppCompatActivity {
                     homeScreenContentMainBinding.bnBarHomeScreen.setSelectedItemId(R.id.navHome);
 
                 } else if (menuItem.replace(" ", "").equalsIgnoreCase(homeMenu.Chat.toString())) {
-
                     replaceFragments(new ChatFragment());
                     homeScreenBinding.drawerLayoutHome.closeDrawer(GravityCompat.START);
                     homeScreenContentMainBinding.bnBarHomeScreen.setSelectedItemId(R.id.navChat);
-
                 } else if (menuItem.replace(" ", "").equalsIgnoreCase(homeMenu.Logout.toString())) {
                     SharedPreferenceManager.getInstance(DashboardActivity.this).clearUserLoggedIn();
                     SharedPreferenceManager.getInstance(DashboardActivity.this).clearUserLoggedIn();
-
                     FirebaseAuth.getInstance().signOut();
                     startActivity(new Intent(DashboardActivity.this, LoginActivity.class));
-
                 } else if (menuItem.replace(" ", "").equalsIgnoreCase(homeMenu.Pooja.toString())) {
-
                     replaceFragments(new PoojaFragment());
                     homeScreenBinding.drawerLayoutHome.closeDrawer(GravityCompat.START);
                     homeScreenContentMainBinding.bnBarHomeScreen.setSelectedItemId(R.id.navPooja);
-
                 } else if (menuItem.replace(" ", "").equalsIgnoreCase(homeMenu.calls.toString())) {
-                    Toast.makeText(DashboardActivity.this, menuItem, Toast.LENGTH_SHORT).show();
                     replaceFragments(new PoojaFragment());
                     homeScreenBinding.drawerLayoutHome.closeDrawer(GravityCompat.START);
                     homeScreenContentMainBinding.bnBarHomeScreen.setSelectedItemId(R.id.navCall);
@@ -208,8 +206,8 @@ public class DashboardActivity extends AppCompatActivity {
         Fragment currentFragment = fragmentManager.findFragmentById(R.id.flHomeScreenMain);
 
         if (currentFragment instanceof HomeFragment) {
+            showExitDialog();
 
-            finishAffinity();
 
         } else if (currentFragment instanceof ChatFragment) {
 
@@ -253,6 +251,43 @@ public class DashboardActivity extends AppCompatActivity {
 
         headerBinding.txUserNameDisplay.setText(text);
 
+    }
+
+    private void showExitDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.dialog_exit, null);
+        builder.setView(dialogView);
+
+// Create the dialog instance
+        final AlertDialog dialog = builder.create();
+
+// Now you can access the dialog's window and set its background
+        Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialogView.setBackgroundResource(R.drawable.dialog_bg);
+
+
+
+        Button btnYes = dialogView.findViewById(R.id.btn_yes);
+        Button btnNo = dialogView.findViewById(R.id.btn_no);
+
+
+        btnYes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                finishAffinity();
+            }
+        });
+
+        btnNo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        // Show the dialog
+        dialog.show();
     }
 
 }

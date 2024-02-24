@@ -2,6 +2,10 @@ package com.app.astrotalk.fragmments;
 
 import static android.view.View.GONE;
 
+import android.Manifest;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -15,7 +19,9 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.app.astrotalk.R;
+import com.app.astrotalk.activity.ChatToAstroActivity;
 import com.app.astrotalk.activity.DashboardActivity;
+import com.app.astrotalk.activity.ProfileActivity;
 import com.app.astrotalk.adapter.UserProfileAdapter;
 import com.app.astrotalk.databinding.FragmentChatBinding;
 import com.app.astrotalk.listeners.OnCategoryItemClick;
@@ -29,6 +35,7 @@ public class ChatFragment extends Fragment {
     private FragmentChatBinding binding;
     private UserProfileAdapter userProfileAdapter;
     List<AllCategory> allUserBase = new ArrayList<>();
+
 
     public ChatFragment() {
         // Required empty public constructor
@@ -46,6 +53,13 @@ public class ChatFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 ((DashboardActivity) requireActivity()).drawerOpen();
+            }
+        });
+        binding.ivRemove.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                binding.edSearch.setText("");
+                binding.ivRemove.setVisibility(View.INVISIBLE);
             }
         });
         // You can now use 'ivMenu' directly for menu click handling
@@ -102,11 +116,15 @@ public class ChatFragment extends Fragment {
         userProfileAdapter.setData(allUserBase, new OnCategoryItemClick() {
             @Override
             public void onItemClick(int position, AllCategory astrologer) {
-
+                Intent iNxt = new Intent(requireActivity(), ChatToAstroActivity.class);
+                iNxt.putExtra("profilePicUrl", astrologer.getImageD());
+                iNxt.putExtra("name", astrologer.getName());
+                startActivity(iNxt);
             }
         });
         binding.rvUsersChat.setAdapter(userProfileAdapter);
     }
+
     public void setData() {
 
         allUserBase.add(new AllCategory(1, "Harsh", R.drawable.astro_1, "Vedic Astrologer", "5 years of experience", "Hindi, English", "Specialized in career and relationships"));
