@@ -1,107 +1,141 @@
 package com.app.astrotalk.activity;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
-import android.Manifest;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+
 import com.app.astrotalk.R;
+import com.app.astrotalk.adapter.UserReviewAdapter;
+import com.app.astrotalk.databinding.ActivityAstroProfileBinding;
+import com.app.astrotalk.model.UserReviewModel;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Random;
 
 public class ProfileActivity extends AppCompatActivity {
-    private final String phoneNumber = "8320577653";
+    private String phoneNumber;
     private static final int REQUEST_CALL_PERMISSION = 1;
+    private ActivityAstroProfileBinding binding;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_astro_profile);
+        binding = ActivityAstroProfileBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+        getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.white));
+        getData();
+        onClickListeners();
+    }
 
-        findViewById(R.id.Back_Iv).setOnClickListener(new View.OnClickListener() {
+    private void onClickListeners() {
+        binding.BackIv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onBackPressed();
             }
         });
 
-        findViewById(R.id.btnChat).setOnClickListener(new View.OnClickListener() {
+        binding.btnChat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent iNxt = new Intent(ProfileActivity.this, ChatToAstroActivity.class);
-                iNxt.putExtra("profilePicUrl", getIntent().getIntExtra("profilePicUrl",0));
+                iNxt.putExtra("profilePicUrl", getIntent().getIntExtra("profilePicUrl", 0));
                 iNxt.putExtra("name", getIntent().getStringExtra("name"));
                 startActivity(iNxt);
             }
         });
 
-        findViewById(R.id.btnCall).setOnClickListener(new View.OnClickListener() {
+        binding.btnCall.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Check for Android 6.0 or higher
                 // Check for call permission
                 if (checkSelfPermission(Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
                     // Permission is granted, proceed with the call
-                    Intent callIntent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + phoneNumber));
-                    startActivity(callIntent);
+                    if (phoneNumber != null) {
+                        Intent callIntent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + phoneNumber));
+                        startActivity(callIntent);
+                    } else {
+                        Toast.makeText(ProfileActivity.this, "Not able to fetch Phone number !! Try Again", Toast.LENGTH_SHORT).show();
+                    }
+
                 } else {
                     // Request permission if not granted
                     requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, REQUEST_CALL_PERMISSION);
                 }
             }
         });
+    }
 
-        // Assuming you have received data from the previous screen
+    private void getData() {
         // Get data from intent
         Intent intent = getIntent();
-        String profilePicUrl = intent.getStringExtra("profilePicUrl");
+        String Address = intent.getStringExtra("Address");
         String name = intent.getStringExtra("name");
         String astrologyType = intent.getStringExtra("astrologyType");
         String experience = intent.getStringExtra("experience");
         String language = intent.getStringExtra("language");
         String aboutAstrology = intent.getStringExtra("aboutAstrology");
         int userPic = intent.getIntExtra("profilePicUrl", 0);
+        phoneNumber = intent.getStringExtra("phoneNumber");
+
+        String userReviewsJson = intent.getStringExtra("userReviewsJson");
+
+        // Convert JSON string to UserReviewModel list using Gson
+        Gson gson = new Gson();
+        Type type = new TypeToken<ArrayList<UserReviewModel>>() {
+        }.getType();
+        ArrayList<UserReviewModel> userReviews = gson.fromJson(userReviewsJson, type);
+        if (userReviews != null && userReviews.size() > 0) {
+            Collections.shuffle(userReviews);
+            UserReviewAdapter userReviewAdapter = new UserReviewAdapter(userReviews, this);
+            binding.rvUserReviews.setAdapter(userReviewAdapter);
+        }
+
+
+         // Create a Random object
+        Random random = new Random();
+
+         // Generate a random float between 3 and 5 (inclusive)
+        float randomRating = 3 + random.nextFloat() * (5 - 3);
+
+        binding.rbAstroRate.setRating(randomRating);
         // Call the method to set the data in the views
-        setAstrologerData(profilePicUrl, name, astrologyType, experience, language, aboutAstrology, userPic);
+        setAstrologerData(Address, name, astrologyType, experience, language, aboutAstrology, userPic);
 
     }
 
-    // Method to set Astrologer data in the views
     @SuppressLint("SetTextI18n")
-    private void setAstrologerData(String profilePicUrl, String name, String astrologyType, String experience, String language, String aboutAstrology, int userPic) {
-        // Get references to the views
-        ImageView profilePicImageView = findViewById(R.id.ivProfile);
-        TextView nameTextView = findViewById(R.id.txtName);
-        TextView astrologyTypeTextView = findViewById(R.id.txtAstroType);
-        TextView experienceTextView = findViewById(R.id.txtExp);
-        TextView languageTextView = findViewById(R.id.txtLang);
-        TextView aboutAstrologyTextView = findViewById(R.id.txtAbout);
-
-        // Set data in the views
-        // You may need to use a library like Picasso or Glide to load the image from the URL
-        // For simplicity, we assume you have a local resource for the profile picture.
-
-        profilePicImageView.setImageResource(userPic);
-        nameTextView.setText("Name: " + name);
-        astrologyTypeTextView.setText("Astrology Type: " + astrologyType);
-        experienceTextView.setText("Experience: " + experience);
-        languageTextView.setText("Language: " + language);
-        aboutAstrologyTextView.setText("About Astrology: " + aboutAstrology);
+    private void setAstrologerData(String Address, String name, String astrologyType, String experience, String language, String aboutAstrology, int userPic) {
+        binding.ivProfile.setImageResource(userPic);
+        binding.txtName.setText("Name: " + name);
+        binding.txtAstroType.setText("Astrologer Type: " + astrologyType);
+        binding.txtExp.setText("Exp: " + experience);
+        binding.txtLang.setText("Lang: " + language);
+        binding.txtAbout.setText("About Astrology: " + aboutAstrology);
+        binding.txtAddress.setText("Address: " + Address);
 
     }
 
+    @SuppressLint("MissingSuperCall")
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
         finish();
     }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);

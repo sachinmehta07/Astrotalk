@@ -1,7 +1,7 @@
 package com.app.astrotalk.listeners;
 
-import com.app.astrotalk.model.AllCategory;
+import com.app.astrotalk.model.AstrolgerModel;
 
 public interface OnCategoryItemClick {
-    void onItemClick(int position, AllCategory astrologer);
+    void onItemClick(int position, AstrolgerModel astrologer);
 }

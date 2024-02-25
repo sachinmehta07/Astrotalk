@@ -1,0 +1,6 @@
+<!-- res/drawable/card_background.xml -->
+
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="@color/app_theme" /> <!-- Background color of the card -->
+    <corners android:radius="8dp" /> <!-- Adjust the radius as needed for rounded corners -->
+</shape>

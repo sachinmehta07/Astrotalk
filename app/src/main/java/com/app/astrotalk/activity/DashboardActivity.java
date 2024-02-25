@@ -15,6 +15,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.telecom.Call;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -98,10 +99,10 @@ public class DashboardActivity extends AppCompatActivity {
         headerBinding.headerUserProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                replaceFragments(new PoojaFragment());
                 homeScreenBinding.drawerLayoutHome.closeDrawer(GravityCompat.START);
             }
         });
+
         //All Click Home
         onClickListeners();
         arrayDataAdd();
@@ -163,31 +164,47 @@ public class DashboardActivity extends AppCompatActivity {
         HomeMenuAdapter homeMenuAdapter = new HomeMenuAdapter(homeMenuModelArrayList, new OnMenuItemClickListener() {
             @Override
             public void onMenuItemClick(int position, String menuItem) {
+                Fragment currentFragment = fragmentManager.findFragmentById(R.id.flHomeScreenMain);
 
                 if (menuItem.replace(" ", "").equalsIgnoreCase(homeMenu.HOME.toString())) {
 
-                    replaceFragments(new HomeFragment());
-                    homeScreenBinding.drawerLayoutHome.closeDrawer(GravityCompat.START);
-                    homeScreenContentMainBinding.bnBarHomeScreen.setSelectedItemId(R.id.navHome);
-
+                    if (currentFragment instanceof HomeFragment) {
+                        homeScreenBinding.drawerLayoutHome.closeDrawer(GravityCompat.START);
+                    } else {
+                        replaceFragments(new HomeFragment());
+                        homeScreenBinding.drawerLayoutHome.closeDrawer(GravityCompat.START);
+                        homeScreenContentMainBinding.bnBarHomeScreen.setSelectedItemId(R.id.navHome);
+                        homeScreenContentMainBinding.bnBarHomeScreen.setSelectedItemId(R.id.navHome);
+                    }
                 } else if (menuItem.replace(" ", "").equalsIgnoreCase(homeMenu.Chat.toString())) {
-                    replaceFragments(new ChatFragment());
-                    homeScreenBinding.drawerLayoutHome.closeDrawer(GravityCompat.START);
-                    homeScreenContentMainBinding.bnBarHomeScreen.setSelectedItemId(R.id.navChat);
+                    if (currentFragment instanceof ChatFragment) {
+                        homeScreenBinding.drawerLayoutHome.closeDrawer(GravityCompat.START);
+                    } else {
+                        replaceFragments(new ChatFragment());
+                        homeScreenBinding.drawerLayoutHome.closeDrawer(GravityCompat.START);
+                        homeScreenContentMainBinding.bnBarHomeScreen.setSelectedItemId(R.id.navChat);
+                    }
                 } else if (menuItem.replace(" ", "").equalsIgnoreCase(homeMenu.Logout.toString())) {
                     SharedPreferenceManager.getInstance(DashboardActivity.this).clearUserLoggedIn();
                     SharedPreferenceManager.getInstance(DashboardActivity.this).clearUserLoggedIn();
                     FirebaseAuth.getInstance().signOut();
                     startActivity(new Intent(DashboardActivity.this, LoginActivity.class));
                 } else if (menuItem.replace(" ", "").equalsIgnoreCase(homeMenu.Pooja.toString())) {
-                    replaceFragments(new PoojaFragment());
-                    homeScreenBinding.drawerLayoutHome.closeDrawer(GravityCompat.START);
-                    homeScreenContentMainBinding.bnBarHomeScreen.setSelectedItemId(R.id.navPooja);
+                    if (currentFragment instanceof PoojaFragment) {
+                        homeScreenBinding.drawerLayoutHome.closeDrawer(GravityCompat.START);
+                    } else {
+                        replaceFragments(new PoojaFragment());
+                        homeScreenBinding.drawerLayoutHome.closeDrawer(GravityCompat.START);
+                        homeScreenContentMainBinding.bnBarHomeScreen.setSelectedItemId(R.id.navPooja);
+                    }
                 } else if (menuItem.replace(" ", "").equalsIgnoreCase(homeMenu.calls.toString())) {
-                    replaceFragments(new PoojaFragment());
-                    homeScreenBinding.drawerLayoutHome.closeDrawer(GravityCompat.START);
-                    homeScreenContentMainBinding.bnBarHomeScreen.setSelectedItemId(R.id.navCall);
-
+                    if (currentFragment instanceof CallFragment) {
+                        homeScreenBinding.drawerLayoutHome.closeDrawer(GravityCompat.START);
+                    } else {
+                        replaceFragments(new PoojaFragment());
+                        homeScreenBinding.drawerLayoutHome.closeDrawer(GravityCompat.START);
+                        homeScreenContentMainBinding.bnBarHomeScreen.setSelectedItemId(R.id.navCall);
+                    }
                 }
             }
         });
@@ -237,7 +254,6 @@ public class DashboardActivity extends AppCompatActivity {
 
     @SuppressLint("NonConstantResourceId")
     public void replaceFragments(Fragment fragment) {
-
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.flHomeScreenMain, fragment);
         transaction.commit();
@@ -265,7 +281,6 @@ public class DashboardActivity extends AppCompatActivity {
 // Now you can access the dialog's window and set its background
         Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialogView.setBackgroundResource(R.drawable.dialog_bg);
-
 
 
         Button btnYes = dialogView.findViewById(R.id.btn_yes);

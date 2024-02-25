@@ -11,7 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.app.astrotalk.listeners.OnCategoryItemClick;
-import com.app.astrotalk.model.AllCategory;
+import com.app.astrotalk.model.AstrolgerModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,11 +19,11 @@ import java.util.Locale;
 
 public class CareerCategoryAdapter extends RecyclerView.Adapter<CareerCategoryAdapter.ViewHolder> {
     private Context context;
-    public List<AllCategory> homeList = new ArrayList<>();
-    public List<AllCategory> filterList = new ArrayList<>();
+    public List<AstrolgerModel> homeList = new ArrayList<>();
+    public List<AstrolgerModel> filterList = new ArrayList<>();
 
     @SuppressLint("NotifyDataSetChanged")
-    public void setData(List<AllCategory> homeList, OnCategoryItemClick onCategoryItemClick) {
+    public void setData(List<AstrolgerModel> homeList, OnCategoryItemClick onCategoryItemClick) {
         this.homeList = homeList;
         this.onCategoryItemClick = onCategoryItemClick;
         filterList.clear();
@@ -105,7 +105,7 @@ public class CareerCategoryAdapter extends RecyclerView.Adapter<CareerCategoryAd
             this.homeList.addAll(filterList);
             // Set data found to true when the search text is empty
         } else {
-            for (AllCategory wp : filterList) {
+            for (AstrolgerModel wp : filterList) {
                 if (wp.getName().toLowerCase().contains(charText.toLowerCase(Locale.getDefault()))) {
                     this.homeList.add(wp);
                 }

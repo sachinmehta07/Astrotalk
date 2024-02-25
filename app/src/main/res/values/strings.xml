@@ -12,7 +12,12 @@
     <string name="tajika">Marriage  Astrologers</string>
     <string name="call">Call</string>
     <string name="chat">Chat</string>
-    <string name="love_astrology">Love Astrology</string>
+    <string name="love_astrology">Love Astrologers</string>
     <string name="todo">TODO</string>
     <string name="write_message_here">Write message here</string>
+    <string name="user_reviews">User Reviews</string>
+    <string name="astrologer_profile">Astrologer Profile</string>
+    <string name="call_to_astrologer">Call to Astrologer</string>
+    <string name="chat_with_astrolger">Chat with Astrologer</string>
+    <string name="astrologers">Astrologers</string>
 </resources>

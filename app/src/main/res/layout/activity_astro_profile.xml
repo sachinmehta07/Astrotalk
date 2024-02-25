@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/action_bar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:id="@+id/action_bar"
         app:layout_constraintLeft_toLeftOf="parent"
+        android:background="@color/app_theme"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -17,8 +17,8 @@
             android:id="@+id/Back_Iv"
             android:layout_width="@dimen/_30sdp"
             android:layout_height="@dimen/_30sdp"
-            android:padding="@dimen/_8sdp"
             android:layout_marginStart="@dimen/_8sdp"
+            android:padding="@dimen/_8sdp"
             android:src="@drawable/back"
             android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -44,14 +44,14 @@
             android:layout_height="0dp"
             android:fontFamily="@font/poppins_bold"
             android:gravity="center"
-            android:text="Profile"
+            android:text="@string/astrologer_profile"
             android:textColor="@color/black"
-            android:textSize="@dimen/_12ssp"
+            android:textSize="@dimen/_14ssp"
             android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="@id/Back_Iv"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/Back_Iv"
-            app:layout_constraintBottom_toBottomOf="@id/Back_Iv"/>
+            app:layout_constraintTop_toTopOf="@id/Back_Iv" />
 
         <TextView
             android:id="@+id/txPackName"
@@ -60,8 +60,9 @@
             android:fontFamily="@font/poppins_semibold"
             android:textSize="@dimen/_9ssp"
             android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="@+id/txtActionBarTitle"
+
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/txtActionBarTitle"
             app:layout_constraintStart_toStartOf="@+id/txtActionBarTitle"
             app:layout_constraintTop_toBottomOf="@+id/txtActionBarTitle"
             tools:text="Pack Name" />
@@ -70,156 +71,223 @@
             android:id="@+id/ivDone"
             android:layout_width="@dimen/_30sdp"
             android:layout_height="@dimen/_30sdp"
-            android:padding="@dimen/_8sdp"
-            android:visibility="invisible"
             android:layout_margin="@dimen/_10sdp"
             android:layout_marginEnd="@dimen/_8sdp"
+            android:padding="@dimen/_8sdp"
+            android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="@+id/Back_Iv"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/Back_Iv" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-    <!-- Profile Card View -->
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardView"
-        android:layout_below="@+id/action_bar"
-        android:padding="@dimen/_10sdp"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp">
+        android:layout_height="match_parent"
+        android:layout_above="@id/llBtns"
+        android:layout_below="@+id/action_bar">
 
-        <RelativeLayout
+        <!-- Container layout to wrap multiple children -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="16dp">
+            android:orientation="vertical">
 
-            <!-- Astrologer Profile Pic -->
-
+            <!-- Profile Card View -->
             <androidx.cardview.widget.CardView
-                android:id="@+id/cvUserPic"
-                android:layout_width="@dimen/_70sdp"
-                android:layout_height="@dimen/_70sdp"
-                app:cardCornerRadius="@dimen/_20sdp"
-                android:layout_marginEnd="@dimen/_5sdp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                android:id="@+id/cardView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-                <ImageView
-                    android:id="@+id/ivProfile"
-                    android:layout_width="@dimen/_70sdp"
-                    android:layout_height="@dimen/_70sdp"
-                    android:padding="0dp"
-                    android:background="@color/app_theme"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/ic_profile" />
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_10sdp">
+
+                    <!-- Astrologer Profile Pic -->
+
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/cvUserPic"
+                        android:layout_width="@dimen/_70sdp"
+                        android:layout_height="@dimen/_70sdp"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginTop="@dimen/_15sdp"
+                        android:layout_marginEnd="@dimen/_5sdp"
+                        app:cardCornerRadius="@dimen/_20sdp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <ImageView
+                            android:id="@+id/ivProfile"
+                            android:layout_width="@dimen/_70sdp"
+                            android:layout_height="@dimen/_70sdp"
+                            android:layout_gravity="center"
+                            android:background="@color/app_theme"
+                            android:padding="0dp"
+                            android:scaleType="fitXY"
+                            android:src="@drawable/ic_profile" />
+
+                    </androidx.cardview.widget.CardView>
+
+
+                    <!-- Astrologer Details -->
+                    <LinearLayout
+                        android:id="@+id/llUserData"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_110sdp"
+                        android:layout_marginStart="@dimen/_5sdp"
+                        android:layout_toEndOf="@id/cvUserPic"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/txtName"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginVertical="@dimen/_3sdp"
+                            android:fontFamily="@font/poppins_bold"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_12ssp"
+                            tools:text="Name: Sachin Mehta" />
+
+                        <TextView
+                            android:id="@+id/txtAstroType"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/poppins_regular"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_10ssp"
+                            tools:text="Astrology Type: Vedic Astrologer" />
+
+                        <TextView
+                            android:id="@+id/txtExp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/poppins_regular"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_10ssp"
+                            tools:text="Experience: 7 Years" />
+
+                        <TextView
+                            android:id="@+id/txtLang"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/poppins_regular"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_10ssp"
+                            tools:text="Language: Hindi" />
+
+                        <RatingBar
+                            android:id="@+id/rbAstroRate"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:isIndicator="true"
+                            android:max="5"
+                            android:numStars="5"
+                            android:rating="2"
+                            android:scaleX=".5"
+                            android:scaleY=".5"
+                            android:transformPivotX="0dp" />
+
+                    </LinearLayout>
+
+                </RelativeLayout>
 
             </androidx.cardview.widget.CardView>
 
-
-
-            <!-- Astrologer Details -->
-            <LinearLayout
+            <!-- About Astrology Section -->
+            <TextView
+                android:id="@+id/txtAbout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignTop="@+id/cvUserPic"
-                android:layout_alignBottom="@+id/cvUserPic"
+                android:fontFamily="@font/poppins_regular"
+                android:padding="@dimen/_5sdp"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_11ssp"
+                tools:text="About Astrology: [Add your 50-word description here]" />
+
+            <!-- Address Section -->
+            <TextView
+                android:id="@+id/txtAddress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/poppins_regular"
+                android:padding="@dimen/_5sdp"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_11ssp"
+                tools:text="Address Astrology: [Add your Address]" />
+
+            <TextView
+                android:id="@+id/txtReview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_5sdp"
-                android:layout_toEndOf="@id/cvUserPic"
-                android:orientation="vertical">
+                android:fontFamily="@font/poppins_bold"
+                android:text="@string/user_reviews"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_12ssp" />
 
-                <TextView
-                    android:id="@+id/txtName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/poppins_bold"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/_12ssp"
-                    tools:text="Name: Sachin Mehta" />
+            <!-- RecyclerView -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvUserReviews"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:nestedScrollingEnabled="false"
+                android:orientation="vertical"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/review_item" />
 
-                <TextView
-                    android:id="@+id/txtAstroType"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/poppins_regular"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/_10ssp"
-                    tools:text="Astrology Type: Vedic Astrologer" />
+        </LinearLayout>
 
-                <TextView
-                    android:id="@+id/txtExp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/poppins_regular"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/_10ssp"
-                    tools:text="Experience: 7 Years" />
-
-                <TextView
-                    android:id="@+id/txtLang"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/poppins_regular"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/_10ssp"
-                    tools:text="Language: Hindi" />
-
-            </LinearLayout>
-
-        </RelativeLayout>
-
-    </androidx.cardview.widget.CardView>
-
-    <!-- About Astrology Section -->
-    <TextView
-        android:id="@+id/txtAbout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/poppins_regular"
-        android:layout_below="@+id/cardView"
-        android:textColor="@color/black"
-        android:padding="@dimen/_10sdp"
-        tools:text="About Astrology: [Add your 50-word description here]"
-        android:textSize="@dimen/_13ssp" />
-
+    </ScrollView>
     <!-- Chat and Call Buttons -->
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/llBtns"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/txtAbout"
-        android:layout_marginTop="16dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:background="#00000000"
         android:orientation="horizontal">
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnChat"
-            android:layout_width="0dp"
+            android:layout_width="@dimen/_120sdp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_margin="@dimen/_15sdp"
+            android:layout_marginVertical="@dimen/_10sdp"
+            android:layout_marginStart="@dimen/_15sdp"
             android:background="@drawable/btnbg"
-            android:fontFamily="@font/poppins_bold"
-            android:textSize="@dimen/_13ssp"
-            android:paddingHorizontal="@dimen/_10sdp"
             android:drawableStart="@drawable/ic_chat"
+            android:fontFamily="@font/poppins_bold"
+            android:gravity="center"
+            android:paddingHorizontal="@dimen/_12sdp"
+            android:text="@string/chat"
+            android:textAlignment="center"
             android:textAllCaps="false"
-            android:layout_weight="1"
-            android:text="@string/chat" />
+            android:textSize="@dimen/_12ssp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnCall"
-            android:layout_width="0dp"
-            android:textAllCaps="false"
-            android:fontFamily="@font/poppins_bold"
-            android:textSize="@dimen/_13ssp"
-            android:paddingHorizontal="@dimen/_10sdp"
-            android:layout_margin="@dimen/_15sdp"
-            android:drawableStart="@drawable/ic_call"
-            android:background="@drawable/btnbg"
+            android:layout_width="@dimen/_120sdp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/call" />
+            android:gravity="center"
+            android:layout_marginVertical="@dimen/_10sdp"
+            android:layout_marginEnd="@dimen/_15sdp"
+            android:background="@drawable/btnbg"
+            android:drawableStart="@drawable/ic_call"
+            android:fontFamily="@font/poppins_bold"
+            android:paddingHorizontal="@dimen/_12sdp"
+            android:text="@string/call"
+            android:textAllCaps="false"
+            android:textSize="@dimen/_12ssp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </RelativeLayout>

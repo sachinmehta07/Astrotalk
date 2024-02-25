@@ -40,49 +40,45 @@ import com.app.astrotalk.adapter.MarriageCategoryAdapter;
 import com.app.astrotalk.adapter.VedicCategoryAdapter;
 import com.app.astrotalk.databinding.FragmentHomeBinding;
 import com.app.astrotalk.listeners.OnCategoryItemClick;
-import com.app.astrotalk.model.AllCategory;
+import com.app.astrotalk.model.AstrolgerModel;
+import com.app.astrotalk.model.UserReviewModel;
 import com.app.astrotalk.utils.Utils;
-
+import com.google.gson.Gson;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class HomeFragment extends Fragment {
-    private ProgressDialog progressDialog;
-    //new Changes
-    private boolean isLoading = false;
     private FragmentHomeBinding binding;
-
-    //Category Wise Data
     private VedicCategoryAdapter vedicCategoryAdapter;
     private LoveCategoryAdapter loveCategoryAdapter;
     private MarriageCategoryAdapter marriageCategoryAdapter;
     private CareerCategoryAdapter careerCategoryAdapter;
-
+    private List<AstrolgerModel> VedicAstroList;
+    private List<AstrolgerModel> careerAstroList;
+    private List<AstrolgerModel> marriageAstroList;
+    private List<AstrolgerModel> loveAstroList;
+    private List<UserReviewModel> vedicAstroListReview;
+    private List<UserReviewModel> UserReviewBaseDataList = new ArrayList<>();
+    private List<UserReviewModel> careerAstroListReview;
+    private List<UserReviewModel> loveListAstroReview;
+    private List<UserReviewModel> marriageAstroListReview;
     private ActivityResultLauncher<Intent> voiceRecognizer;
+    private final int MY_PERMISSIONS_RECORD_AUDIO = 1;
 
     public HomeFragment() {
         // Required empty public constructor
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment using View Binding
         binding = FragmentHomeBinding.inflate(inflater, container, false);
-
-        // Access views using binding
-        binding.ivMenu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ((DashboardActivity) requireActivity()).drawerOpen();
-            }
-        });
-
-
-        // You can now use 'menuIcon' directly
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         requireActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-        binding.edSearch.setCursorVisible(true);
 
+        // You can now use 'menuIcon' directly
+        binding.edSearch.setCursorVisible(true);
 
         return binding.getRoot();
     }
@@ -90,10 +86,11 @@ public class HomeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         Initialization();
         onClickListeners();
-        apiHomeData();
+        loadData();
+        setData();
+
 
         voiceRecognizer = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
             @Override
@@ -104,7 +101,6 @@ public class HomeFragment extends Fragment {
                         if (resultList != null && resultList.size() > 0) {
 
                             String recognizedText = resultList.get(0);
-                            setSearchResult(recognizedText);
                             binding.edSearch.setText(recognizedText);
 
                             //Utils.searchTextValue = recognizedText;
@@ -122,12 +118,14 @@ public class HomeFragment extends Fragment {
         voiceRecognizer.launch(intent);
     }
 
-    public void setSearchResult(String value) {
-//        bindingte.txSS.setText(value);
-        //binding.txAllCategoriesList.setText(value);
-    }
-
     private void onClickListeners() {
+
+        binding.ivMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((DashboardActivity) requireActivity()).drawerOpen();
+            }
+        });
 
         binding.edSearch.setFilters(new InputFilter[]{
                 new InputFilter() {
@@ -182,8 +180,6 @@ public class HomeFragment extends Fragment {
 
     }
 
-    private final int MY_PERMISSIONS_RECORD_AUDIO = 1;
-
     private boolean requestAudioPermissions() {
         if (ContextCompat.checkSelfPermission(requireActivity(),
                 Manifest.permission.RECORD_AUDIO)
@@ -216,6 +212,22 @@ public class HomeFragment extends Fragment {
 
     private void Initialization() {
 
+        VedicAstroList = new ArrayList<>();
+        careerAstroList = new ArrayList<>();
+        marriageAstroList = new ArrayList<>();
+        loveAstroList = new ArrayList<>();
+
+
+        vedicCategoryAdapter = new VedicCategoryAdapter(requireActivity());
+        careerCategoryAdapter = new CareerCategoryAdapter(requireActivity());
+        marriageCategoryAdapter = new MarriageCategoryAdapter(requireActivity());
+        loveCategoryAdapter = new LoveCategoryAdapter(requireActivity());
+
+        vedicAstroListReview = new ArrayList<>();
+        careerAstroListReview = new ArrayList<>();
+        loveListAstroReview = new ArrayList<>();
+        marriageAstroListReview = new ArrayList<>();
+
         binding.edSearch.addTextChangedListener(new TextWatcher() {
             @Override
             public void onTextChanged(CharSequence cs, int arg1, int arg2, int arg3) {
@@ -231,7 +243,7 @@ public class HomeFragment extends Fragment {
                     binding.ivMic.setVisibility(View.INVISIBLE);
 
                     if (vedicCategoryAdapter != null && careerCategoryAdapter != null && loveCategoryAdapter != null && marriageCategoryAdapter != null) {
-                        if ((vedicCategoryAdapter.homeList.size() == 0 && careerCategoryAdapter.homeList.size() == 0) && ( loveCategoryAdapter.homeList.size() == 0 && marriageCategoryAdapter.homeList.size() == 0)) {
+                        if ((vedicCategoryAdapter.homeList.size() == 0 && careerCategoryAdapter.homeList.size() == 0) && (loveCategoryAdapter.homeList.size() == 0 && marriageCategoryAdapter.homeList.size() == 0)) {
                             binding.txNoResult.setVisibility(View.VISIBLE);
                             binding.txtVedicAstrology.setVisibility(GONE);
                             binding.txtLoveAstrology.setVisibility(GONE);
@@ -267,72 +279,109 @@ public class HomeFragment extends Fragment {
 
     }
 
-    private void apiHomeData() {
+    public void loadData() {
 
-        binding.ivMenu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ((DashboardActivity) requireActivity()).drawerOpen();
-            }
-        });
+        UserReviewBaseDataList.add(new UserReviewModel(R.drawable.tst_1, "Rahul", 5, "Amazing astrologer! Predictions were spot on and helped me navigate through career decisions."));
+        UserReviewBaseDataList.add(new UserReviewModel(R.drawable.tst_2, "Priya", 4, "Good insights into personal relationships. Predicted some key events in my life accurately."));
+        UserReviewBaseDataList.add(new UserReviewModel(R.drawable.tst_3, "Kiran", 3, "Average experience. Some predictions were accurate, while others were off the mark."));
+        UserReviewBaseDataList.add(new UserReviewModel(R.drawable.tst_f_5, "Neha", 5, "Exceptional astrologer! Provided deep insights into my life, and the guidance was invaluable."));
+        UserReviewBaseDataList.add(new UserReviewModel(R.drawable.tst_4, "Vikram", 4, "Satisfactory predictions. Helped me understand the challenges ahead and how to overcome them."));
+        UserReviewBaseDataList.add(new UserReviewModel(R.drawable.tst_7, "Ram", 3, "Decent astrologer. Predictions were general, and some did not resonate with my experiences."));
+        UserReviewBaseDataList.add(new UserReviewModel(R.drawable.tst_8, "Amit", 5, "Highly recommended! Accurate predictions, and the astrologer has a deep understanding of Vedic astrology."));
+        UserReviewBaseDataList.add(new UserReviewModel(R.drawable.tst_9, "Sanjay", 4, "Impressive insights! The astrologer provided accurate predictions, and I found the session enlightening."));
+        UserReviewBaseDataList.add(new UserReviewModel(R.drawable.tst_10, "Rahul", 3, "Average experience. Some predictions resonated, while others seemed generic and unrelated."));
+        UserReviewBaseDataList.add(new UserReviewModel(R.drawable.tst_f_11, "Nisha", 5, "Exceptional astrologer! Predictions were detailed, and the guidance provided was immensely helpful."));
+        UserReviewBaseDataList.add(new UserReviewModel(R.drawable.tst_12_f, "Deepa", 4, "Satisfied with the predictions. The astrologer offered valuable insights into my career path and personal life."));
+        UserReviewBaseDataList.add(new UserReviewModel(R.drawable.tst_13_f, "Meera", 5, "Highly recommended! The astrologer accurately predicted major life events and provided practical advice."));
+        UserReviewBaseDataList.add(new UserReviewModel(R.drawable.tst_f_14, "Aarti", 3, "Decent predictions. Some insights were accurate, but others felt vague and open to interpretation."));
+        UserReviewBaseDataList.add(new UserReviewModel(R.drawable.tst_15_f, "Pooja", 4, "Good astrologer! Helped me gain clarity on certain aspects of my life, and the predictions were mostly accurate."));
+        UserReviewBaseDataList.add(new UserReviewModel(R.drawable.tst_16_f, "Anjali", 5, "Exceptional service! The astrologer provided in-depth insights, and the predictions were remarkably accurate."));
+        UserReviewBaseDataList.add(new UserReviewModel(R.drawable.tst_17, "Karan", 3, "Average predictions. Some aspects were accurate, but overall, the session lacked the depth I was expecting."));
+        UserReviewBaseDataList.add(new UserReviewModel(R.drawable.tst_18, "Aditya", 4, "Satisfied with the astrologer's guidance. Predictions were insightful, and the session was conducted professionally."));
+        UserReviewBaseDataList.add(new UserReviewModel(R.drawable.tst_19, "Juhi", 5, "Highly recommended! The astrologer's predictions were remarkably accurate, and the guidance provided was invaluable."));
+        UserReviewBaseDataList.add(new UserReviewModel(R.drawable.tst_20, "Vikas", 4, "Good astrologer! Predictions were mostly accurate, and the session helped me gain clarity on various aspects of my life."));
+        UserReviewBaseDataList.add(new UserReviewModel(R.drawable.tst_21, "Sayam", 3, "Average experience. The astrologer provided some accurate insights, but overall, the session lacked depth."));
+        UserReviewBaseDataList.add(new UserReviewModel(R.drawable.tst_22, "Varun", 5, "Exceptional service! The astrologer's predictions were on point, and the guidance provided was extremely helpful."));
 
-        List<AllCategory> VedicAstroList = new ArrayList<>();
-        List<AllCategory> careerAstroList = new ArrayList<>();
-        List<AllCategory> marriageAstroList = new ArrayList<>();
-        List<AllCategory> loveAstroList = new ArrayList<>();
+        Collections.shuffle(UserReviewBaseDataList);
 
-        vedicCategoryAdapter = new VedicCategoryAdapter(requireActivity());
-        careerCategoryAdapter = new CareerCategoryAdapter(requireActivity());
-        marriageCategoryAdapter = new MarriageCategoryAdapter(requireActivity());
-        loveCategoryAdapter = new LoveCategoryAdapter(requireActivity());
+       // Split the shuffled data into different lists
+        vedicAstroListReview.addAll(UserReviewBaseDataList.subList(0, 4));
+        Collections.shuffle(vedicAstroListReview);
 
+        careerAstroListReview.addAll(UserReviewBaseDataList.subList(4, 8));
+        Collections.shuffle(careerAstroListReview);
 
-        // Vedic Astrologers
-        VedicAstroList.add(new AllCategory(1, "Harsh", R.drawable.astro_1, "Vedic Astrologer", "5 years of experience", "Hindi, English", "Specialized in career and relationships"));
-        VedicAstroList.add(new AllCategory(2, "Rahul", R.drawable.astro_2, "Vedic Astrologer", "8 years of experience", "Sanskrit, Hindi", "Expert in predictive astrology"));
-        VedicAstroList.add(new AllCategory(3, "Sneha", R.drawable.astro_f_1, "Vedic Astrologer", "6 years of experience", "English, Tamil", "Specialized in health predictions"));
-        VedicAstroList.add(new AllCategory(4, "Kiran", R.drawable.astro_3, "Vedic Astrologer", "7 years of experience", "Gujarati, Hindi", "Expert in financial astrology"));
-        VedicAstroList.add(new AllCategory(5, "Arjun", R.drawable.astro_4, "Vedic Astrologer", "4 years of experience", "English, Kannada", "Specialized in gemstone recommendations"));
-        VedicAstroList.add(new AllCategory(6, "Sachin", R.drawable.astro_5, "Vedic Astrologer", "4 years of experience", "English, Kannada", "Specialized in gemstone recommendations"));
-        VedicAstroList.add(new AllCategory(7, "Darshan", R.drawable.astro_6, "Vedic Astrologer", "4 years of experience", "English, Kannada", "Specialized in gemstone recommendations"));
-        VedicAstroList.add(new AllCategory(8, "Neha", R.drawable.astro_f_2, "Vedic Astrologer", "9 years of experience", "Hindi, Punjabi", "Expert in spiritual guidance"));
+        loveListAstroReview.addAll(UserReviewBaseDataList.subList(8, 12));
+        Collections.shuffle(loveListAstroReview);
 
-// Career Astrologers
-        careerAstroList.add(new AllCategory(1, "Jay", R.drawable.astro_c_4, "Career Astrologer", "6 years of experience", "English, Marathi", "Expert in career counseling and growth predictions"));
-        careerAstroList.add(new AllCategory(2, "Amit", R.drawable.astro_c_1, "Career Astrologer", "4 years of experience", "Hindi, English", "Specialized in job change predictions"));
-        careerAstroList.add(new AllCategory(3, "Priyanka", R.drawable.astro_f_c_7, "Career Astrologer", "7 years of experience", "Gujarati, English", "Expert in business and entrepreneurship predictions"));
-        careerAstroList.add(new AllCategory(4, "Raj", R.drawable.astro_c_5, "Career Astrologer", "5 years of experience", "Hindi, Tamil", "Specialized in leadership and management guidance"));
-        careerAstroList.add(new AllCategory(5, "Seema", R.drawable.astro_f_c_6, "Career Astrologer", "8 years of experience", "English, Telugu", "Expert in skill development predictions"));
-        careerAstroList.add(new AllCategory(6, "Sita", R.drawable.astro_f_3, "Career Astrologer", "3 years of experience", "Hindi, Kannada", "Specialized in education and academic predictions"));
-        careerAstroList.add(new AllCategory(7, "Sayam", R.drawable.atstro_c_2, "Career Astrologer", "3 years of experience", "Hindi, Kannada", "Specialized in education and academic predictions"));
-        careerAstroList.add(new AllCategory(8, "Pooja", R.drawable.astro_f_c_8, "Career Astrologer", "3 years of experience", "Hindi, Kannada", "Specialized in education and academic predictions"));
+        marriageAstroListReview.addAll(UserReviewBaseDataList.subList(12, 16));
+        Collections.shuffle(marriageAstroListReview);
 
-// Marriage Astrologers
-        marriageAstroList.add(new AllCategory(1, "Manoj", R.drawable.astro_m_1, "Marriage Astrologer", "7 years of experience", "Gujarati, Hindi", "Expert in match-making and compatibility analysis"));
-        marriageAstroList.add(new AllCategory(2, "Sandeep", R.drawable.astro_m_2, "Marriage Astrologer", "5 years of experience", "English, Punjabi", "Specialized in love marriage predictions"));
-        marriageAstroList.add(new AllCategory(3, "Deepa", R.drawable.astro_m_3, "Marriage Astrologer", "6 years of experience", "Hindi, Marathi", "Expert in family and relationship counseling"));
-        marriageAstroList.add(new AllCategory(4, "Rahul", R.drawable.astro_m_4, "Marriage Astrologer", "8 years of experience", "English, Kannada", "Specialized in post-marriage guidance"));
-        marriageAstroList.add(new AllCategory(5, "Pooja", R.drawable.astro_m_f_7, "Marriage Astrologer", "4 years of experience", "Gujarati, Hindi", "Expert in resolving marital conflicts"));
-        marriageAstroList.add(new AllCategory(6, "Arun", R.drawable.astro_m_5, "Marriage Astrologer", "9 years of experience", "Hindi, Tamil", "Specialized in Kundli matching"));
-        marriageAstroList.add(new AllCategory(7, "Arun", R.drawable.astro_m_6, "Marriage Astrologer", "9 years of experience", "Hindi, Tamil", "Specialized in Kundli matching"));
-        marriageAstroList.add(new AllCategory(8, "Jinal", R.drawable.astro_m_f_8, "Marriage Astrologer", "9 years of experience", "Hindi, Tamil", "Specialized in Kundli matching"));
+        //Sample Data Change Phone Number here
+        VedicAstroList.add(new AstrolgerModel(
+                1,
+                "Harsh",
+                R.drawable.astro_1,
+                "Vedic Astrologer",
+                "5 years of experience",
+                "Hindi, English",
+                "Employ a complex system based on ancient Hindu texts, focusing on karma and reincarnation.",
+                "Surat, Gujarat, India",
+                "8320577653",
+                vedicAstroListReview
+        ));
 
-// Love Astrologers
-        loveAstroList.add(new AllCategory(1, "Love", R.drawable.astro_l_1, "Love Astrologer", "4 years of experience", "Hindi, English", "Expert in love life guidance"));
-        loveAstroList.add(new AllCategory(2, "Vikram", R.drawable.astro_l_2, "Love Astrologer", "6 years of experience", "Telugu, English", "Specialized in relationship compatibility"));
-        loveAstroList.add(new AllCategory(3, "Suman", R.drawable.astro_l_3, "Love Astrologer", "5 years of experience", "Hindi, Marathi", "Expert in resolving love conflicts"));
-        loveAstroList.add(new AllCategory(4, "Piyush", R.drawable.astro_l_4, "Love Astrologer", "7 years of experience", "English, Punjabi", "Specialized in love horoscope analysis"));
-        loveAstroList.add(new AllCategory(5, "Aditya", R.drawable.astro_l_5, "Love Astrologer", "3 years of experience", "Hindi, Tamil", "Expert in love compatibility predictions"));
-        loveAstroList.add(new AllCategory(6, "Preeti", R.drawable.astro_l_f_6, "Love Astrologer", "8 years of experience", "Gujarati, English", "Specialized in love and romance predictions"));
-        loveAstroList.add(new AllCategory(6, "Ritika", R.drawable.astro_l_f_7, "Love Astrologer", "8 years of experience", "Gujarati, English", "Specialized in love and romance predictions"));
-        loveAstroList.add(new AllCategory(6, "Isha", R.drawable.astro_l_f_8, "Love Astrologer", "8 years of experience", "Gujarati, English", "Specialized in love and romance predictions"));
+        // Adding the data to the VedicAstroList
+        VedicAstroList.add(new AstrolgerModel(2, "Rahul", R.drawable.astro_2, "Vedic Astrologer", "8 years of experience", "Sanskrit, Hindi", "Rahul is an experienced Vedic Astrologer with 8 years of practice. Fluent in Sanskrit and Hindi, he specializes in predictive astrology.", "Mumbai, Maharashtra, India", "8320577653", vedicAstroListReview));
+        VedicAstroList.add(new AstrolgerModel(3, "Sneha", R.drawable.astro_f_1, "Vedic Astrologer", "6 years of experience", "English, Tamil", "Sneha, a Vedic Astrologer with 6 years of experience, is proficient in English and Tamil. She excels in health predictions.", "Chennai, Tamil Nadu, India", "8320577653", vedicAstroListReview));
+        VedicAstroList.add(new AstrolgerModel(4, "Kiran", R.drawable.astro_3, "Vedic Astrologer", "7 years of experience", "Gujarati, Hindi", "Kiran is a Vedic Astrologer with 7 years of expertise, specializing in financial astrology. Fluent in Gujarati and Hindi.", "Ahmedabad, Gujarat, India", "8320577653", vedicAstroListReview));
+        VedicAstroList.add(new AstrolgerModel(5, "Arjun", R.drawable.astro_4, "Vedic Astrologer", "4 years of experience", "English, Kannada", "Arjun, with 4 years of experience, is a Vedic Astrologer proficient in English and Kannada. He specializes in gemstone recommendations.", "Bangalore, Karnataka, India", "8320577653", vedicAstroListReview));
+        VedicAstroList.add(new AstrolgerModel(6, "Sachin", R.drawable.astro_5, "Vedic Astrologer", "4 years of experience", "English, Kannada", "Sachin, a Vedic Astrologer with 4 years of practice, excels in English and Kannada. His expertise lies in gemstone recommendations.", "Mysuru, Karnataka, India", "8320577653", vedicAstroListReview));
+        VedicAstroList.add(new AstrolgerModel(7, "Darshan", R.drawable.astro_6, "Vedic Astrologer", "4 years of experience", "English, Kannada", "Darshan is a Vedic Astrologer with 4 years of experience, fluent in English and Kannada. He specializes in gemstone recommendations.", "Hubli, Karnataka, India", "8320577653", vedicAstroListReview));
+        VedicAstroList.add(new AstrolgerModel(8, "Neha", R.drawable.astro_f_2, "Vedic Astrologer", "9 years of experience", "Hindi, Punjabi", "Neha, with 9 years of experience, is a Vedic Astrologer proficient in Hindi and Punjabi. She excels in providing spiritual guidance.", "Amritsar, Punjab, India", "8320577653", vedicAstroListReview));
+
+        // Adding the data to the careerAstroList
+        careerAstroList.add(new AstrolgerModel(1, "Jay", R.drawable.astro_c_4, "Career Astrologer", "6 years of experience", "English, Marathi", "Expert in career counseling and growth predictions", "Surat, Gujarat, India", "8320577653", careerAstroListReview));
+        careerAstroList.add(new AstrolgerModel(2, "Amit", R.drawable.astro_c_1, "Career Astrologer", "4 years of experience", "Hindi, English", "Amit is a Career Astrologer with 4 years of experience, proficient in Hindi and English. He specializes in job change predictions.", "Mumbai, Maharashtra, India", "8320577653", careerAstroListReview));
+        careerAstroList.add(new AstrolgerModel(3, "Priyanka", R.drawable.astro_f_c_7, "Career Astrologer", "7 years of experience", "Gujarati, English", "Priyanka, a Career Astrologer with 7 years of experience, is proficient in Gujarati and English. She excels in business and entrepreneurship predictions.", "Ahmedabad, Gujarat, India", "8320577653", careerAstroListReview));
+        careerAstroList.add(new AstrolgerModel(4, "Raj", R.drawable.astro_c_5, "Career Astrologer", "5 years of experience", "Hindi, Tamil", "Raj is a Career Astrologer with 5 years of experience, fluent in Hindi and Tamil. He specializes in leadership and management guidance.", "Chennai, Tamil Nadu, India", "8320577653", careerAstroListReview));
+        careerAstroList.add(new AstrolgerModel(5, "Seema", R.drawable.astro_f_c_6, "Career Astrologer", "8 years of experience", "English, Telugu", "Seema, with 8 years of experience, is a Career Astrologer proficient in English and Telugu. She is an expert in skill development predictions.", "Hyderabad, Telangana, India", "8320577653", careerAstroListReview));
+        careerAstroList.add(new AstrolgerModel(6, "Sita", R.drawable.astro_f_3, "Career Astrologer", "3 years of experience", "Hindi, Kannada", "Sita, a Career Astrologer with 3 years of practice, excels in Hindi and Kannada. She specializes in education and academic predictions.", "Bangalore, Karnataka, India", "8320577653", careerAstroListReview));
+        careerAstroList.add(new AstrolgerModel(7, "Sayam", R.drawable.atstro_c_2, "Career Astrologer", "3 years of experience", "Hindi, Kannada", "Sayam is a Career Astrologer with 3 years of experience, fluent in Hindi and Kannada. He specializes in education and academic predictions.", "Bangalore, Karnataka, India", "8320577653", careerAstroListReview));
+        careerAstroList.add(new AstrolgerModel(8, "Pooja", R.drawable.astro_f_c_8, "Career Astrologer", "3 years of experience", "Hindi, Kannada", "Pooja, with 3 years of experience, is a Career Astrologer proficient in Hindi and Kannada. She specializes in education and academic predictions.", "Bangalore, Karnataka, India", "8320577653", careerAstroListReview));
 
 
-        Log.d("TAG", "apiHomeData: " + VedicAstroList.size());
+        // Adding the data to the marriageAstroList
+        marriageAstroList.add(new AstrolgerModel(1, "Manoj", R.drawable.astro_m_1, "Marriage Astrologer", "7 years of experience", "Gujarati, Hindi", "Expert in match-making and compatibility analysis", "Ahmedabad, Gujarat, India", "8320577653", marriageAstroListReview));
+        marriageAstroList.add(new AstrolgerModel(2, "Sandeep", R.drawable.astro_m_2, "Marriage Astrologer", "5 years of experience", "English, Punjabi", "Sandeep is a Marriage Astrologer with 5 years of experience, proficient in English and Punjabi. He specializes in love marriage predictions.", "Chandigarh, Punjab, India", "8320577653", marriageAstroListReview));
+        marriageAstroList.add(new AstrolgerModel(3, "Deepa", R.drawable.astro_m_3, "Marriage Astrologer", "6 years of experience", "Hindi, Marathi", "Deepa is a Marriage Astrologer with 6 years of experience, fluent in Hindi and Marathi. She is an expert in family and relationship counseling.", "Mumbai, Maharashtra, India", "8320577653", marriageAstroListReview));
+        marriageAstroList.add(new AstrolgerModel(4, "Rahul", R.drawable.astro_m_4, "Marriage Astrologer", "8 years of experience", "English, Kannada", "Rahul is a Marriage Astrologer with 8 years of experience, proficient in English and Kannada. He specializes in post-marriage guidance.", "Bangalore, Karnataka, India", "8320577653", marriageAstroListReview));
+        marriageAstroList.add(new AstrolgerModel(5, "Pooja", R.drawable.astro_m_f_7, "Marriage Astrologer", "4 years of experience", "Gujarati, Hindi", "Pooja is a Marriage Astrologer with 4 years of experience, proficient in Gujarati and Hindi. She is an expert in resolving marital conflicts.", "Ahmedabad, Gujarat, India", "8320577653", marriageAstroListReview));
+        marriageAstroList.add(new AstrolgerModel(6, "Arun", R.drawable.astro_m_5, "Marriage Astrologer", "9 years of experience", "Hindi, Tamil", "Arun is a Marriage Astrologer with 9 years of experience, fluent in Hindi and Tamil. He specializes in Kundli matching.", "Chennai, Tamil Nadu, India", "8320577653", marriageAstroListReview));
+        marriageAstroList.add(new AstrolgerModel(7, "Arun", R.drawable.astro_m_6, "Marriage Astrologer", "9 years of experience", "Hindi, Tamil", "Arun is a Marriage Astrologer with 9 years of experience, fluent in Hindi and Tamil. He specializes in Kundli matching.", "Chennai, Tamil Nadu, India", "8320577653", marriageAstroListReview));
+        marriageAstroList.add(new AstrolgerModel(8, "Jinal", R.drawable.astro_m_f_8, "Marriage Astrologer", "9 years of experience", "Hindi, Tamil", "Jinal is a Marriage Astrologer with 9 years of experience, proficient in Hindi and Tamil. She specializes in Kundli matching.", "Chennai, Tamil Nadu, India", "8320577653", marriageAstroListReview));
+
+        // Adding the data to the loveAstroList
+        loveAstroList.add(new AstrolgerModel(1, "Sameer", R.drawable.astro_l_1, "Love Astrologer", "4 years of experience", "Hindi, English", "Expert in love life guidance", "Mumbai, Maharashtra, India", "8320577653", loveListAstroReview));
+        loveAstroList.add(new AstrolgerModel(2, "Vikram", R.drawable.astro_l_2, "Love Astrologer", "6 years of experience", "Telugu, English", "Vikram is a Love Astrologer with 6 years of experience, proficient in Telugu and English. He specializes in relationship compatibility.", "Hyderabad, Telangana, India", "8320577653", loveListAstroReview));
+        loveAstroList.add(new AstrolgerModel(3, "Suman", R.drawable.astro_l_3, "Love Astrologer", "5 years of experience", "Hindi, Marathi", "Suman is a Love Astrologer with 5 years of experience, fluent in Hindi and Marathi. She is an expert in resolving love conflicts.", "Mumbai, Maharashtra, India", "8320577653", loveListAstroReview));
+        loveAstroList.add(new AstrolgerModel(4, "Piyush", R.drawable.astro_l_4, "Love Astrologer", "7 years of experience", "English, Punjabi", "Piyush is a Love Astrologer with 7 years of experience, proficient in English and Punjabi. He specializes in love horoscope analysis.", "Chandigarh, Punjab, India", "8320577653", loveListAstroReview));
+        loveAstroList.add(new AstrolgerModel(5, "Aditya", R.drawable.astro_l_5, "Love Astrologer", "3 years of experience", "Hindi, Tamil", "Aditya is a Love Astrologer with 3 years of experience, fluent in Hindi and Tamil. He is an expert in love compatibility predictions.", "Chennai, Tamil Nadu, India", "8320577653", loveListAstroReview));
+        loveAstroList.add(new AstrolgerModel(6, "Preeti", R.drawable.astro_l_f_6, "Love Astrologer", "8 years of experience", "Gujarati, English", "Preeti is a Love Astrologer with 8 years of experience, proficient in Gujarati and English. She specializes in love and romance predictions.", "Ahmedabad, Gujarat, India", "8320577653", loveListAstroReview));
+        loveAstroList.add(new AstrolgerModel(7, "Ritika", R.drawable.astro_l_f_7, "Love Astrologer", "8 years of experience", "Gujarati, English", "Ritika is a Love Astrologer with 8 years of experience, proficient in Gujarati and English. She specializes in love and romance predictions.", "Ahmedabad, Gujarat, India", "8320577653", loveListAstroReview));
+        loveAstroList.add(new AstrolgerModel(8, "Isha", R.drawable.astro_l_f_8, "Love Astrologer", "8 years of experience", "Gujarati, English", "Isha is a Love Astrologer with 8 years of experience, proficient in Gujarati and English. She specializes in love and romance predictions.", "Ahmedabad, Gujarat, India", "8320577653", loveListAstroReview));
+
+    }
+
+
+    private void setData() {
         vedicCategoryAdapter.setData(VedicAstroList, new OnCategoryItemClick() {
             @Override
-            public void onItemClick(int position, AllCategory astrologer) {
+            public void onItemClick(int position, AstrolgerModel astrologer) {
+                Gson gson = new Gson();
 
+                String userReviewsJson = gson.toJson(astrologer.getUserReviews());
                 Intent intent = new Intent(requireActivity(), ProfileActivity.class);
                 intent.putExtra("profilePicUrl", astrologer.getImageD()); // Replace with the actual URL
                 intent.putExtra("name", astrologer.getName());
@@ -340,16 +389,19 @@ public class HomeFragment extends Fragment {
                 intent.putExtra("experience", astrologer.getAstroExp());
                 intent.putExtra("language", astrologer.getAstroLang());
                 intent.putExtra("aboutAstrology", astrologer.getAstroAbout());
-
+                intent.putExtra("userReviewsJson", userReviewsJson);
+                intent.putExtra("Address", astrologer.getAddress());
+                intent.putExtra("phoneNumber", astrologer.getPhoneNumber());
                 // Start the ProfileActivity
                 startActivity(intent);
             }
         });
-
         marriageCategoryAdapter.setData(marriageAstroList, new OnCategoryItemClick() {
             @Override
-            public void onItemClick(int position, AllCategory astrologer) {
+            public void onItemClick(int position, AstrolgerModel astrologer) {
 
+                Gson gson = new Gson();
+                String userReviewsJson = gson.toJson(astrologer.getUserReviews());
                 Intent intent = new Intent(requireActivity(), ProfileActivity.class);
                 intent.putExtra("profilePicUrl", astrologer.getImageD()); // Replace with the actual URL
                 intent.putExtra("name", astrologer.getName());
@@ -357,17 +409,19 @@ public class HomeFragment extends Fragment {
                 intent.putExtra("experience", astrologer.getAstroExp());
                 intent.putExtra("language", astrologer.getAstroLang());
                 intent.putExtra("aboutAstrology", astrologer.getAstroAbout());
-
+                intent.putExtra("userReviewsJson", userReviewsJson);
+                intent.putExtra("Address", astrologer.getAddress());
+                intent.putExtra("phoneNumber", astrologer.getPhoneNumber());
                 // Start the ProfileActivity
                 startActivity(intent);
             }
         });
-
-
         careerCategoryAdapter.setData(careerAstroList, new OnCategoryItemClick() {
             @Override
-            public void onItemClick(int position, AllCategory astrologer) {
+            public void onItemClick(int position, AstrolgerModel astrologer) {
 
+                Gson gson = new Gson();
+                String userReviewsJson = gson.toJson(astrologer.getUserReviews());
                 Intent intent = new Intent(requireActivity(), ProfileActivity.class);
                 intent.putExtra("profilePicUrl", astrologer.getImageD()); // Replace with the actual URL
                 intent.putExtra("name", astrologer.getName());
@@ -375,7 +429,9 @@ public class HomeFragment extends Fragment {
                 intent.putExtra("experience", astrologer.getAstroExp());
                 intent.putExtra("language", astrologer.getAstroLang());
                 intent.putExtra("aboutAstrology", astrologer.getAstroAbout());
-
+                intent.putExtra("userReviewsJson", userReviewsJson);
+                intent.putExtra("Address", astrologer.getAddress());
+                intent.putExtra("phoneNumber", astrologer.getPhoneNumber());
                 // Start the ProfileActivity
                 startActivity(intent);
             }
@@ -383,8 +439,10 @@ public class HomeFragment extends Fragment {
 
         loveCategoryAdapter.setData(loveAstroList, new OnCategoryItemClick() {
             @Override
-            public void onItemClick(int position, AllCategory astrologer) {
+            public void onItemClick(int position, AstrolgerModel astrologer) {
 
+                Gson gson = new Gson();
+                String userReviewsJson = gson.toJson(astrologer.getUserReviews());
                 Intent intent = new Intent(requireActivity(), ProfileActivity.class);
                 intent.putExtra("profilePicUrl", astrologer.getImageD()); // Replace with the actual URL
                 intent.putExtra("name", astrologer.getName());
@@ -392,7 +450,9 @@ public class HomeFragment extends Fragment {
                 intent.putExtra("experience", astrologer.getAstroExp());
                 intent.putExtra("language", astrologer.getAstroLang());
                 intent.putExtra("aboutAstrology", astrologer.getAstroAbout());
-
+                intent.putExtra("userReviewsJson", userReviewsJson);
+                intent.putExtra("Address", astrologer.getAddress());
+                intent.putExtra("phoneNumber", astrologer.getPhoneNumber());
                 // Start the ProfileActivity
                 startActivity(intent);
             }

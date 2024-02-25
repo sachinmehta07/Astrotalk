@@ -35,7 +35,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/poppins_bold"
             android:gravity="center"
-            android:text="Home"
+            android:text="@string/astrologers"
             android:textColor="@color/black"
             android:textSize="@dimen/_15ssp"
             android:visibility="visible"
@@ -133,7 +133,7 @@
         android:id="@+id/scrollHome"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/_80sdp"
+        android:layout_marginTop="@dimen/_90sdp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/clSearchView">
 
