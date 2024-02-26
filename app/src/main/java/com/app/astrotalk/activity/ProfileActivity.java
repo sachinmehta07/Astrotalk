@@ -54,6 +54,7 @@ public class ProfileActivity extends AppCompatActivity {
                 Intent iNxt = new Intent(ProfileActivity.this, ChatToAstroActivity.class);
                 iNxt.putExtra("profilePicUrl", getIntent().getIntExtra("profilePicUrl", 0));
                 iNxt.putExtra("name", getIntent().getStringExtra("name"));
+                iNxt.putExtra("userId",getIntent().getStringExtra("userId"));
                 startActivity(iNxt);
             }
         });

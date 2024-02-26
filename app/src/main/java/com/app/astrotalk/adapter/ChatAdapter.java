@@ -23,11 +23,21 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatModelViewH
         this.context = context;
         this.chatList = new ArrayList<>();
     }
+    public void setChatList(List<String> chatList) {
+        this.chatList = chatList;
+        notifyDataSetChanged();
+    }
+
 
     public void addMessage(String message) {
         chatList.add(message);
         notifyDataSetChanged();
     }
+
+    public List<String> getChatList() {
+        return chatList;
+    }
+
 
     @NonNull
     @Override
@@ -40,20 +50,22 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatModelViewH
     public void onBindViewHolder(@NonNull ChatModelViewHolder holder, int position) {
         String message = chatList.get(position);
 
-        if (position % 2 == 0) {
+        if (isUserMessage(position)) {
             // User's message
-            // App's response
             holder.leftChatLayout.setVisibility(View.GONE);
             holder.rightChatLayout.setVisibility(View.VISIBLE);
             holder.rightChatTextview.setText(message);
         } else {
+            // App's response
             holder.leftChatLayout.setVisibility(View.VISIBLE);
             holder.rightChatLayout.setVisibility(View.GONE);
             holder.leftChatTextview.setText(message);
-
         }
     }
-
+    private boolean isUserMessage(int position) {
+        // Check if the message at the given position is from the user
+        return position % 2 == 0;
+    }
     @Override
     public int getItemCount() {
         return chatList.size();

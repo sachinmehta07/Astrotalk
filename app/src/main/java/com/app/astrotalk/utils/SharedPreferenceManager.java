@@ -3,11 +3,18 @@ package com.app.astrotalk.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 public class SharedPreferenceManager {
     private static final String SHARED_PREF_NAME = "my_shared_pref";
     private static final String KEY_USER_LOGGED_IN = "user_logged_in";
     private static final String KEY_USER_NAME = "user_name"; // New key for user name
-
     private static SharedPreferenceManager instance;
     private SharedPreferences sharedPreferences;
 
@@ -15,6 +22,28 @@ public class SharedPreferenceManager {
         sharedPreferences = context.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
     }
 
+    public void setChatMessages(String userId, List<String> chatMessages) {
+        Gson gson = new Gson();
+        String messagesJson = gson.toJson(chatMessages);
+
+        String key = "chat_" + userId;
+
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(key, messagesJson);
+        editor.apply();
+    }
+    // Updated method to get chat messages as a list
+    public List<String> getChatMessages(String key) {
+        String messagesJson = sharedPreferences.getString(key, "");
+
+        if (!messagesJson.isEmpty()) {
+            Gson gson = new Gson();
+            Type type = new TypeToken<List<String>>() {}.getType();
+            return gson.fromJson(messagesJson, type);
+        } else {
+            return new ArrayList<>();
+        }
+    }
     public static synchronized SharedPreferenceManager getInstance(Context context) {
         if (instance == null) {
             instance = new SharedPreferenceManager(context);
@@ -36,6 +65,7 @@ public class SharedPreferenceManager {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.remove(KEY_USER_LOGGED_IN);
         editor.remove(KEY_USER_NAME);
+        editor.clear();
         editor.apply();
     }
 

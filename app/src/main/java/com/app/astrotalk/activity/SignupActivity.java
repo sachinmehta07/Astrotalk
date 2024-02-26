@@ -98,6 +98,16 @@ public class SignupActivity extends AppCompatActivity {
             return;
         }
 
+        if (password.length() < 4) {
+            Toast.makeText(getApplicationContext(),
+                            "Password must be at least 4 digit long!",
+                            Toast.LENGTH_LONG)
+                    .show();
+            // hide the progress bar
+            progressbar.setVisibility(View.GONE);
+            return;
+        }
+
         // Validate email format
         if (!isValidEmail(email)) {
             Toast.makeText(getApplicationContext(),

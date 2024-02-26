@@ -7,6 +7,7 @@
     android:padding="15dp"
     android:background="#FFFFFF"
     tools:context=".activity.SignupActivity">
+
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="wrap_content"
@@ -16,12 +17,25 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <ProgressBar
+        android:id="@+id/progressbar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:progressTint="@color/app_theme"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/clMain"
+        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:id="@+id/clMain"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView">
+        app:layout_constraintTop_toBottomOf="@+id/progressbar">
 
         <TextView
             android:id="@+id/textViewHeading"
@@ -91,14 +105,7 @@
             app:layout_constraintTop_toBottomOf="@+id/passwd" />
 
         <!-- ProgressBar for loading time -->
-        <ProgressBar
-            android:id="@+id/progressbar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btnregister" />
+
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/loginNow"
@@ -115,7 +122,7 @@
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/progressbar" />
+            app:layout_constraintTop_toBottomOf="@+id/btnregister" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
     <!-- TextView for heading -->

@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -14,19 +15,22 @@ import android.widget.Toast;
 import com.app.astrotalk.R;
 import com.app.astrotalk.adapter.ChatAdapter;
 import com.app.astrotalk.databinding.ActivityChatToAstroBinding;
+import com.app.astrotalk.utils.SharedPreferenceManager;
 
+import java.util.List;
 import java.util.Random;
 
 public class ChatToAstroActivity extends AppCompatActivity {
     private ChatAdapter chatAdapter;
     private ActivityChatToAstroBinding activityChatToAstroBinding;
+    private String userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         activityChatToAstroBinding = ActivityChatToAstroBinding.inflate(getLayoutInflater());
         setContentView(activityChatToAstroBinding.getRoot());
-
+        userId = getIntent().getStringExtra("userId");
         int userPic = getIntent().getIntExtra("profilePicUrl", 0);
         activityChatToAstroBinding.ivProfile.setImageResource(userPic); // Set default profile pic or load from URL
         activityChatToAstroBinding.txtUserName.setText(getIntent().getStringExtra("name"));
@@ -47,27 +51,55 @@ public class ChatToAstroActivity extends AppCompatActivity {
 
                 String userMessage = activityChatToAstroBinding.chatMessageInput.getText().toString().trim();
 
-                if(userMessage.isEmpty()){
+                if (userMessage.isEmpty()) {
                     Toast.makeText(ChatToAstroActivity.this, "Please add Message", Toast.LENGTH_SHORT).show();
-                }else {
+                } else {
                     chatAdapter.addMessage(userMessage);
-
+                    saveChatMessage(userId, userMessage);
                     // Simulate app response (you can replace this logic with your own)
-                    String appResponse = getResponse(userMessage);
-                    chatAdapter.addMessage(appResponse);
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            String appResponse = getResponse(userMessage);
+                            chatAdapter.addMessage(appResponse);
 
-                    // Scroll to the last item in the RecyclerView (auto-scroll)
-                    activityChatToAstroBinding.chatRecyclerView.scrollToPosition(chatAdapter.getItemCount() - 1);
+                            // Scroll to the last item in the RecyclerView (auto-scroll)
+                            activityChatToAstroBinding.chatRecyclerView.scrollToPosition(chatAdapter.getItemCount() - 1);
+                        }
+                    }, 500);
 
                     activityChatToAstroBinding.chatMessageInput.getText().clear();
                 }
 
             }
         });
-
+        loadChatMessages(userId);
 
     }
 
+    private void saveChatMessage(String userId, String message) {
+        // Use the userId as a key to store chat messages
+        String key = "chat_" + userId;
+
+        // Retrieve existing chat messages
+        List<String> existingMessages = SharedPreferenceManager.getInstance(this).getChatMessages(key);
+
+        // Append the new message
+        existingMessages.add(message);
+
+        // Save the updated messages
+        SharedPreferenceManager.getInstance(this).setChatMessages(key, existingMessages);
+    }
+
+    private void loadChatMessages(String userId) {
+        String key = "chat_" + userId;
+
+        // Retrieve chat messages from SharedPreferences
+        List<String> chatMessages = SharedPreferenceManager.getInstance(this).getChatMessages(key);
+
+        // Update the RecyclerView
+        chatAdapter.setChatList(chatMessages);
+    }
     // Sample logic for generating app responses
     private String getResponse(String userMessage) {
 
@@ -269,5 +301,16 @@ public class ChatToAstroActivity extends AppCompatActivity {
         };
 
         return responses[new Random().nextInt(responses.length)];
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        SharedPreferenceManager.getInstance(this).setChatMessages(userId, chatAdapter.getChatList());
     }
 }

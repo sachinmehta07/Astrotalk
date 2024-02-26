@@ -54,7 +54,7 @@ public class LoginActivity extends AppCompatActivity {
         emailTextView = findViewById(R.id.email);
         passwordTextView = findViewById(R.id.password);
         Btn = findViewById(R.id.login);
-        progressbar = findViewById(R.id.progressBar);
+        progressbar = findViewById(R.id.progressbar);
 
         // Set on Click Listener on Sign-in button
         Btn.setOnClickListener(new View.OnClickListener() {
@@ -122,9 +122,9 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         // Check for empty password
-        if (password.isEmpty()) {
+        if (password.isEmpty() || password.length() < 4) {
             Toast.makeText(getApplicationContext(),
-                            "Password cannot be empty!",
+                            "Password must be at least 4 digit long!",
                             Toast.LENGTH_LONG)
                     .show();
             // hide the progress bar

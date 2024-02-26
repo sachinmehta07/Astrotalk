@@ -44,6 +44,7 @@ import com.app.astrotalk.model.AstrolgerModel;
 import com.app.astrotalk.model.UserReviewModel;
 import com.app.astrotalk.utils.Utils;
 import com.google.gson.Gson;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -59,7 +60,7 @@ public class HomeFragment extends Fragment {
     private List<AstrolgerModel> marriageAstroList;
     private List<AstrolgerModel> loveAstroList;
     private List<UserReviewModel> vedicAstroListReview;
-    private List<UserReviewModel> UserReviewBaseDataList = new ArrayList<>();
+    private final List<UserReviewModel> UserReviewBaseDataList = new ArrayList<>();
     private List<UserReviewModel> careerAstroListReview;
     private List<UserReviewModel> loveListAstroReview;
     private List<UserReviewModel> marriageAstroListReview;
@@ -151,14 +152,6 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 if (Utils.isNetworkAvailable(requireActivity())) {
-//                    PermissionManager.Builder().key(2100).permission(new PermissionManager().getStoragePermissionList()).askAgain(true).askAgainCallback(response -> PermissionManager.showDialog(getActivity(), response)).callback(allPermissionsGranted -> {
-//                        if (allPermissionsGranted) {
-//                            displaySpeechRecognizer();
-//                        } else {
-//                            PermissionManager.showSettingDialog(getActivity());
-//                        }
-//                    }).ask(getActivity());
-
                     if (requestAudioPermissions()) {
                         displaySpeechRecognizer();
                     }
@@ -177,17 +170,16 @@ public class HomeFragment extends Fragment {
                 binding.ivMic.setVisibility(View.VISIBLE);
             }
         });
-
     }
 
     private boolean requestAudioPermissions() {
-        if (ContextCompat.checkSelfPermission(requireActivity(),
-                Manifest.permission.RECORD_AUDIO)
-                != PackageManager.PERMISSION_GRANTED) {
-
+        if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+            Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+            intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+            requireActivity().setResult(RESULT_OK, intent);
+            voiceRecognizer.launch(intent);
             // When permission is not granted by the user, show them a message explaining why this permission is needed.
-            if (ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(),
-                    Manifest.permission.RECORD_AUDIO)) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(), Manifest.permission.RECORD_AUDIO)) {
                 Toast.makeText(requireActivity(), "Please grant permissions to record audio", Toast.LENGTH_LONG).show();
 
                 // Give the user the option to still opt-in for the permissions
@@ -305,7 +297,7 @@ public class HomeFragment extends Fragment {
 
         Collections.shuffle(UserReviewBaseDataList);
 
-       // Split the shuffled data into different lists
+        // Split the shuffled data into different lists
         vedicAstroListReview.addAll(UserReviewBaseDataList.subList(0, 4));
         Collections.shuffle(vedicAstroListReview);
 
@@ -319,58 +311,47 @@ public class HomeFragment extends Fragment {
         Collections.shuffle(marriageAstroListReview);
 
         //Sample Data Change Phone Number here
-        VedicAstroList.add(new AstrolgerModel(
-                1,
-                "Harsh",
-                R.drawable.astro_1,
-                "Vedic Astrologer",
-                "5 years of experience",
-                "Hindi, English",
-                "Employ a complex system based on ancient Hindu texts, focusing on karma and reincarnation.",
-                "Surat, Gujarat, India",
-                "8320577653",
-                vedicAstroListReview
-        ));
+        VedicAstroList.add(new AstrolgerModel(1, "Harsh", R.drawable.astro_1, "Vedic Astrologer", "5 years of experience", "Hindi, English", "Employ a complex system based on ancient Hindu texts, focusing on karma and reincarnation.", "Surat, Gujarat, India", Utils.vedicAstroPhoneNumberDummy, vedicAstroListReview));
 
         // Adding the data to the VedicAstroList
-        VedicAstroList.add(new AstrolgerModel(2, "Rahul", R.drawable.astro_2, "Vedic Astrologer", "8 years of experience", "Sanskrit, Hindi", "Rahul is an experienced Vedic Astrologer with 8 years of practice. Fluent in Sanskrit and Hindi, he specializes in predictive astrology.", "Mumbai, Maharashtra, India", "8320577653", vedicAstroListReview));
-        VedicAstroList.add(new AstrolgerModel(3, "Sneha", R.drawable.astro_f_1, "Vedic Astrologer", "6 years of experience", "English, Tamil", "Sneha, a Vedic Astrologer with 6 years of experience, is proficient in English and Tamil. She excels in health predictions.", "Chennai, Tamil Nadu, India", "8320577653", vedicAstroListReview));
-        VedicAstroList.add(new AstrolgerModel(4, "Kiran", R.drawable.astro_3, "Vedic Astrologer", "7 years of experience", "Gujarati, Hindi", "Kiran is a Vedic Astrologer with 7 years of expertise, specializing in financial astrology. Fluent in Gujarati and Hindi.", "Ahmedabad, Gujarat, India", "8320577653", vedicAstroListReview));
-        VedicAstroList.add(new AstrolgerModel(5, "Arjun", R.drawable.astro_4, "Vedic Astrologer", "4 years of experience", "English, Kannada", "Arjun, with 4 years of experience, is a Vedic Astrologer proficient in English and Kannada. He specializes in gemstone recommendations.", "Bangalore, Karnataka, India", "8320577653", vedicAstroListReview));
-        VedicAstroList.add(new AstrolgerModel(6, "Sachin", R.drawable.astro_5, "Vedic Astrologer", "4 years of experience", "English, Kannada", "Sachin, a Vedic Astrologer with 4 years of practice, excels in English and Kannada. His expertise lies in gemstone recommendations.", "Mysuru, Karnataka, India", "8320577653", vedicAstroListReview));
-        VedicAstroList.add(new AstrolgerModel(7, "Darshan", R.drawable.astro_6, "Vedic Astrologer", "4 years of experience", "English, Kannada", "Darshan is a Vedic Astrologer with 4 years of experience, fluent in English and Kannada. He specializes in gemstone recommendations.", "Hubli, Karnataka, India", "8320577653", vedicAstroListReview));
-        VedicAstroList.add(new AstrolgerModel(8, "Neha", R.drawable.astro_f_2, "Vedic Astrologer", "9 years of experience", "Hindi, Punjabi", "Neha, with 9 years of experience, is a Vedic Astrologer proficient in Hindi and Punjabi. She excels in providing spiritual guidance.", "Amritsar, Punjab, India", "8320577653", vedicAstroListReview));
+        VedicAstroList.add(new AstrolgerModel(2, "Rahul", R.drawable.astro_2, "Vedic Astrologer", "8 years of experience", "Sanskrit, Hindi", "Rahul is an experienced Vedic Astrologer with 8 years of practice. Fluent in Sanskrit and Hindi, he specializes in predictive astrology.", "Mumbai, Maharashtra, India", Utils.vedicAstroPhoneNumberDummy, vedicAstroListReview));
+        VedicAstroList.add(new AstrolgerModel(3, "Sneha", R.drawable.astro_f_1, "Vedic Astrologer", "6 years of experience", "English, Tamil", "Sneha, a Vedic Astrologer with 6 years of experience, is proficient in English and Tamil. She excels in health predictions.", "Chennai, Tamil Nadu, India", Utils.vedicAstroPhoneNumberDummy, vedicAstroListReview));
+        VedicAstroList.add(new AstrolgerModel(4, "Kiran", R.drawable.astro_3, "Vedic Astrologer", "7 years of experience", "Gujarati, Hindi", "Kiran is a Vedic Astrologer with 7 years of expertise, specializing in financial astrology. Fluent in Gujarati and Hindi.", "Ahmedabad, Gujarat, India", Utils.vedicAstroPhoneNumberDummy, vedicAstroListReview));
+        VedicAstroList.add(new AstrolgerModel(5, "Arjun", R.drawable.astro_4, "Vedic Astrologer", "4 years of experience", "English, Kannada", "Arjun, with 4 years of experience, is a Vedic Astrologer proficient in English and Kannada. He specializes in gemstone recommendations.", "Bangalore, Karnataka, India", Utils.vedicAstroPhoneNumberDummy, vedicAstroListReview));
+        VedicAstroList.add(new AstrolgerModel(6, "Sachin", R.drawable.astro_5, "Vedic Astrologer", "4 years of experience", "English, Kannada", "Sachin, a Vedic Astrologer with 4 years of practice, excels in English and Kannada. His expertise lies in gemstone recommendations.", "Mysuru, Karnataka, India", Utils.vedicAstroPhoneNumberDummy, vedicAstroListReview));
+        VedicAstroList.add(new AstrolgerModel(7, "Darshan", R.drawable.astro_6, "Vedic Astrologer", "4 years of experience", "English, Kannada", "Darshan is a Vedic Astrologer with 4 years of experience, fluent in English and Kannada. He specializes in gemstone recommendations.", "Hubli, Karnataka, India", Utils.vedicAstroPhoneNumberDummy, vedicAstroListReview));
+        VedicAstroList.add(new AstrolgerModel(8, "Neha", R.drawable.astro_f_2, "Vedic Astrologer", "9 years of experience", "Hindi, Punjabi", "Neha, with 9 years of experience, is a Vedic Astrologer proficient in Hindi and Punjabi. She excels in providing spiritual guidance.", "Amritsar, Punjab, India", Utils.vedicAstroPhoneNumberDummy, vedicAstroListReview));
 
         // Adding the data to the careerAstroList
-        careerAstroList.add(new AstrolgerModel(1, "Jay", R.drawable.astro_c_4, "Career Astrologer", "6 years of experience", "English, Marathi", "Expert in career counseling and growth predictions", "Surat, Gujarat, India", "8320577653", careerAstroListReview));
-        careerAstroList.add(new AstrolgerModel(2, "Amit", R.drawable.astro_c_1, "Career Astrologer", "4 years of experience", "Hindi, English", "Amit is a Career Astrologer with 4 years of experience, proficient in Hindi and English. He specializes in job change predictions.", "Mumbai, Maharashtra, India", "8320577653", careerAstroListReview));
-        careerAstroList.add(new AstrolgerModel(3, "Priyanka", R.drawable.astro_f_c_7, "Career Astrologer", "7 years of experience", "Gujarati, English", "Priyanka, a Career Astrologer with 7 years of experience, is proficient in Gujarati and English. She excels in business and entrepreneurship predictions.", "Ahmedabad, Gujarat, India", "8320577653", careerAstroListReview));
-        careerAstroList.add(new AstrolgerModel(4, "Raj", R.drawable.astro_c_5, "Career Astrologer", "5 years of experience", "Hindi, Tamil", "Raj is a Career Astrologer with 5 years of experience, fluent in Hindi and Tamil. He specializes in leadership and management guidance.", "Chennai, Tamil Nadu, India", "8320577653", careerAstroListReview));
-        careerAstroList.add(new AstrolgerModel(5, "Seema", R.drawable.astro_f_c_6, "Career Astrologer", "8 years of experience", "English, Telugu", "Seema, with 8 years of experience, is a Career Astrologer proficient in English and Telugu. She is an expert in skill development predictions.", "Hyderabad, Telangana, India", "8320577653", careerAstroListReview));
-        careerAstroList.add(new AstrolgerModel(6, "Sita", R.drawable.astro_f_3, "Career Astrologer", "3 years of experience", "Hindi, Kannada", "Sita, a Career Astrologer with 3 years of practice, excels in Hindi and Kannada. She specializes in education and academic predictions.", "Bangalore, Karnataka, India", "8320577653", careerAstroListReview));
-        careerAstroList.add(new AstrolgerModel(7, "Sayam", R.drawable.atstro_c_2, "Career Astrologer", "3 years of experience", "Hindi, Kannada", "Sayam is a Career Astrologer with 3 years of experience, fluent in Hindi and Kannada. He specializes in education and academic predictions.", "Bangalore, Karnataka, India", "8320577653", careerAstroListReview));
-        careerAstroList.add(new AstrolgerModel(8, "Pooja", R.drawable.astro_f_c_8, "Career Astrologer", "3 years of experience", "Hindi, Kannada", "Pooja, with 3 years of experience, is a Career Astrologer proficient in Hindi and Kannada. She specializes in education and academic predictions.", "Bangalore, Karnataka, India", "8320577653", careerAstroListReview));
+        careerAstroList.add(new AstrolgerModel(7, "Jay", R.drawable.astro_c_4, "Career Astrologer", "6 years of experience", "English, Marathi", "Expert in career counseling and growth predictions", "Surat, Gujarat, India", Utils.careerAstroPhoneNumberDummy, careerAstroListReview));
+        careerAstroList.add(new AstrolgerModel(8, "Amit", R.drawable.astro_c_1, "Career Astrologer", "4 years of experience", "Hindi, English", "Amit is a Career Astrologer with 4 years of experience, proficient in Hindi and English. He specializes in job change predictions.", "Mumbai, Maharashtra, India", Utils.careerAstroPhoneNumberDummy, careerAstroListReview));
+        careerAstroList.add(new AstrolgerModel(9, "Priyanka", R.drawable.astro_f_c_7, "Career Astrologer", "7 years of experience", "Gujarati, English", "Priyanka, a Career Astrologer with 7 years of experience, is proficient in Gujarati and English. She excels in business and entrepreneurship predictions.", "Ahmedabad, Gujarat, India", Utils.careerAstroPhoneNumberDummy, careerAstroListReview));
+        careerAstroList.add(new AstrolgerModel(10, "Raj", R.drawable.astro_c_5, "Career Astrologer", "5 years of experience", "Hindi, Tamil", "Raj is a Career Astrologer with 5 years of experience, fluent in Hindi and Tamil. He specializes in leadership and management guidance.", "Chennai, Tamil Nadu, India", Utils.careerAstroPhoneNumberDummy, careerAstroListReview));
+        careerAstroList.add(new AstrolgerModel(11, "Seema", R.drawable.astro_f_c_6, "Career Astrologer", "8 years of experience", "English, Telugu", "Seema, with 8 years of experience, is a Career Astrologer proficient in English and Telugu. She is an expert in skill development predictions.", "Hyderabad, Telangana, India", Utils.careerAstroPhoneNumberDummy, careerAstroListReview));
+        careerAstroList.add(new AstrolgerModel(12, "Sita", R.drawable.astro_f_3, "Career Astrologer", "3 years of experience", "Hindi, Kannada", "Sita, a Career Astrologer with 3 years of practice, excels in Hindi and Kannada. She specializes in education and academic predictions.", "Bangalore, Karnataka, India", Utils.careerAstroPhoneNumberDummy, careerAstroListReview));
+        careerAstroList.add(new AstrolgerModel(13, "Sayam", R.drawable.atstro_c_2, "Career Astrologer", "3 years of experience", "Hindi, Kannada", "Sayam is a Career Astrologer with 3 years of experience, fluent in Hindi and Kannada. He specializes in education and academic predictions.", "Bangalore, Karnataka, India", Utils.careerAstroPhoneNumberDummy, careerAstroListReview));
+        careerAstroList.add(new AstrolgerModel(14, "Pooja", R.drawable.astro_f_c_8, "Career Astrologer", "3 years of experience", "Hindi, Kannada", "Pooja, with 3 years of experience, is a Career Astrologer proficient in Hindi and Kannada. She specializes in education and academic predictions.", "Bangalore, Karnataka, India", Utils.careerAstroPhoneNumberDummy, careerAstroListReview));
 
 
         // Adding the data to the marriageAstroList
-        marriageAstroList.add(new AstrolgerModel(1, "Manoj", R.drawable.astro_m_1, "Marriage Astrologer", "7 years of experience", "Gujarati, Hindi", "Expert in match-making and compatibility analysis", "Ahmedabad, Gujarat, India", "8320577653", marriageAstroListReview));
-        marriageAstroList.add(new AstrolgerModel(2, "Sandeep", R.drawable.astro_m_2, "Marriage Astrologer", "5 years of experience", "English, Punjabi", "Sandeep is a Marriage Astrologer with 5 years of experience, proficient in English and Punjabi. He specializes in love marriage predictions.", "Chandigarh, Punjab, India", "8320577653", marriageAstroListReview));
-        marriageAstroList.add(new AstrolgerModel(3, "Deepa", R.drawable.astro_m_3, "Marriage Astrologer", "6 years of experience", "Hindi, Marathi", "Deepa is a Marriage Astrologer with 6 years of experience, fluent in Hindi and Marathi. She is an expert in family and relationship counseling.", "Mumbai, Maharashtra, India", "8320577653", marriageAstroListReview));
-        marriageAstroList.add(new AstrolgerModel(4, "Rahul", R.drawable.astro_m_4, "Marriage Astrologer", "8 years of experience", "English, Kannada", "Rahul is a Marriage Astrologer with 8 years of experience, proficient in English and Kannada. He specializes in post-marriage guidance.", "Bangalore, Karnataka, India", "8320577653", marriageAstroListReview));
-        marriageAstroList.add(new AstrolgerModel(5, "Pooja", R.drawable.astro_m_f_7, "Marriage Astrologer", "4 years of experience", "Gujarati, Hindi", "Pooja is a Marriage Astrologer with 4 years of experience, proficient in Gujarati and Hindi. She is an expert in resolving marital conflicts.", "Ahmedabad, Gujarat, India", "8320577653", marriageAstroListReview));
-        marriageAstroList.add(new AstrolgerModel(6, "Arun", R.drawable.astro_m_5, "Marriage Astrologer", "9 years of experience", "Hindi, Tamil", "Arun is a Marriage Astrologer with 9 years of experience, fluent in Hindi and Tamil. He specializes in Kundli matching.", "Chennai, Tamil Nadu, India", "8320577653", marriageAstroListReview));
-        marriageAstroList.add(new AstrolgerModel(7, "Arun", R.drawable.astro_m_6, "Marriage Astrologer", "9 years of experience", "Hindi, Tamil", "Arun is a Marriage Astrologer with 9 years of experience, fluent in Hindi and Tamil. He specializes in Kundli matching.", "Chennai, Tamil Nadu, India", "8320577653", marriageAstroListReview));
-        marriageAstroList.add(new AstrolgerModel(8, "Jinal", R.drawable.astro_m_f_8, "Marriage Astrologer", "9 years of experience", "Hindi, Tamil", "Jinal is a Marriage Astrologer with 9 years of experience, proficient in Hindi and Tamil. She specializes in Kundli matching.", "Chennai, Tamil Nadu, India", "8320577653", marriageAstroListReview));
+        marriageAstroList.add(new AstrolgerModel(15, "Manoj", R.drawable.astro_m_1, "Marriage Astrologer", "7 years of experience", "Gujarati, Hindi", "Expert in match-making and compatibility analysis", "Ahmedabad, Gujarat, India", Utils.marriageAstroPhoneNumberDummy, marriageAstroListReview));
+        marriageAstroList.add(new AstrolgerModel(16, "Sandeep", R.drawable.astro_m_2, "Marriage Astrologer", "5 years of experience", "English, Punjabi", "Sandeep is a Marriage Astrologer with 5 years of experience, proficient in English and Punjabi. He specializes in love marriage predictions.", "Chandigarh, Punjab, India", Utils.marriageAstroPhoneNumberDummy, marriageAstroListReview));
+        marriageAstroList.add(new AstrolgerModel(17, "Deepa", R.drawable.astro_m_3, "Marriage Astrologer", "6 years of experience", "Hindi, Marathi", "Deepa is a Marriage Astrologer with 6 years of experience, fluent in Hindi and Marathi. She is an expert in family and relationship counseling.", "Mumbai, Maharashtra, India", Utils.marriageAstroPhoneNumberDummy, marriageAstroListReview));
+        marriageAstroList.add(new AstrolgerModel(18, "Rahul", R.drawable.astro_m_4, "Marriage Astrologer", "8 years of experience", "English, Kannada", "Rahul is a Marriage Astrologer with 8 years of experience, proficient in English and Kannada. He specializes in post-marriage guidance.", "Bangalore, Karnataka, India", Utils.marriageAstroPhoneNumberDummy, marriageAstroListReview));
+        marriageAstroList.add(new AstrolgerModel(19, "Pooja", R.drawable.astro_m_f_7, "Marriage Astrologer", "4 years of experience", "Gujarati, Hindi", "Pooja is a Marriage Astrologer with 4 years of experience, proficient in Gujarati and Hindi. She is an expert in resolving marital conflicts.", "Ahmedabad, Gujarat, India", Utils.marriageAstroPhoneNumberDummy, marriageAstroListReview));
+        marriageAstroList.add(new AstrolgerModel(20, "Arun", R.drawable.astro_m_5, "Marriage Astrologer", "9 years of experience", "Hindi, Tamil", "Arun is a Marriage Astrologer with 9 years of experience, fluent in Hindi and Tamil. He specializes in Kundli matching.", "Chennai, Tamil Nadu, India", Utils.marriageAstroPhoneNumberDummy, marriageAstroListReview));
+        marriageAstroList.add(new AstrolgerModel(21, "Arun", R.drawable.astro_m_6, "Marriage Astrologer", "9 years of experience", "Hindi, Tamil", "Arun is a Marriage Astrologer with 9 years of experience, fluent in Hindi and Tamil. He specializes in Kundli matching.", "Chennai, Tamil Nadu, India", Utils.marriageAstroPhoneNumberDummy, marriageAstroListReview));
+        marriageAstroList.add(new AstrolgerModel(22, "Jinal", R.drawable.astro_m_f_8, "Marriage Astrologer", "9 years of experience", "Hindi, Tamil", "Jinal is a Marriage Astrologer with 9 years of experience, proficient in Hindi and Tamil. She specializes in Kundli matching.", "Chennai, Tamil Nadu, India", Utils.marriageAstroPhoneNumberDummy, marriageAstroListReview));
 
         // Adding the data to the loveAstroList
-        loveAstroList.add(new AstrolgerModel(1, "Sameer", R.drawable.astro_l_1, "Love Astrologer", "4 years of experience", "Hindi, English", "Expert in love life guidance", "Mumbai, Maharashtra, India", "8320577653", loveListAstroReview));
-        loveAstroList.add(new AstrolgerModel(2, "Vikram", R.drawable.astro_l_2, "Love Astrologer", "6 years of experience", "Telugu, English", "Vikram is a Love Astrologer with 6 years of experience, proficient in Telugu and English. He specializes in relationship compatibility.", "Hyderabad, Telangana, India", "8320577653", loveListAstroReview));
-        loveAstroList.add(new AstrolgerModel(3, "Suman", R.drawable.astro_l_3, "Love Astrologer", "5 years of experience", "Hindi, Marathi", "Suman is a Love Astrologer with 5 years of experience, fluent in Hindi and Marathi. She is an expert in resolving love conflicts.", "Mumbai, Maharashtra, India", "8320577653", loveListAstroReview));
-        loveAstroList.add(new AstrolgerModel(4, "Piyush", R.drawable.astro_l_4, "Love Astrologer", "7 years of experience", "English, Punjabi", "Piyush is a Love Astrologer with 7 years of experience, proficient in English and Punjabi. He specializes in love horoscope analysis.", "Chandigarh, Punjab, India", "8320577653", loveListAstroReview));
-        loveAstroList.add(new AstrolgerModel(5, "Aditya", R.drawable.astro_l_5, "Love Astrologer", "3 years of experience", "Hindi, Tamil", "Aditya is a Love Astrologer with 3 years of experience, fluent in Hindi and Tamil. He is an expert in love compatibility predictions.", "Chennai, Tamil Nadu, India", "8320577653", loveListAstroReview));
-        loveAstroList.add(new AstrolgerModel(6, "Preeti", R.drawable.astro_l_f_6, "Love Astrologer", "8 years of experience", "Gujarati, English", "Preeti is a Love Astrologer with 8 years of experience, proficient in Gujarati and English. She specializes in love and romance predictions.", "Ahmedabad, Gujarat, India", "8320577653", loveListAstroReview));
-        loveAstroList.add(new AstrolgerModel(7, "Ritika", R.drawable.astro_l_f_7, "Love Astrologer", "8 years of experience", "Gujarati, English", "Ritika is a Love Astrologer with 8 years of experience, proficient in Gujarati and English. She specializes in love and romance predictions.", "Ahmedabad, Gujarat, India", "8320577653", loveListAstroReview));
-        loveAstroList.add(new AstrolgerModel(8, "Isha", R.drawable.astro_l_f_8, "Love Astrologer", "8 years of experience", "Gujarati, English", "Isha is a Love Astrologer with 8 years of experience, proficient in Gujarati and English. She specializes in love and romance predictions.", "Ahmedabad, Gujarat, India", "8320577653", loveListAstroReview));
+        loveAstroList.add(new AstrolgerModel(23, "Sameer", R.drawable.astro_l_1, "Love Astrologer", "4 years of experience", "Hindi, English", "Expert in love life guidance", "Mumbai, Maharashtra, India", Utils.loveAstroPhoneNumberDummy, loveListAstroReview));
+        loveAstroList.add(new AstrolgerModel(24, "Vikram", R.drawable.astro_l_2, "Love Astrologer", "6 years of experience", "Telugu, English", "Vikram is a Love Astrologer with 6 years of experience, proficient in Telugu and English. He specializes in relationship compatibility.", "Hyderabad, Telangana, India", Utils.loveAstroPhoneNumberDummy, loveListAstroReview));
+        loveAstroList.add(new AstrolgerModel(25, "Suman", R.drawable.astro_l_3, "Love Astrologer", "5 years of experience", "Hindi, Marathi", "Suman is a Love Astrologer with 5 years of experience, fluent in Hindi and Marathi. She is an expert in resolving love conflicts.", "Mumbai, Maharashtra, India", Utils.loveAstroPhoneNumberDummy, loveListAstroReview));
+        loveAstroList.add(new AstrolgerModel(26, "Piyush", R.drawable.astro_l_4, "Love Astrologer", "7 years of experience", "English, Punjabi", "Piyush is a Love Astrologer with 7 years of experience, proficient in English and Punjabi. He specializes in love horoscope analysis.", "Chandigarh, Punjab, India", Utils.loveAstroPhoneNumberDummy, loveListAstroReview));
+        loveAstroList.add(new AstrolgerModel(27, "Aditya", R.drawable.astro_l_5, "Love Astrologer", "3 years of experience", "Hindi, Tamil", "Aditya is a Love Astrologer with 3 years of experience, fluent in Hindi and Tamil. He is an expert in love compatibility predictions.", "Chennai, Tamil Nadu, India", Utils.loveAstroPhoneNumberDummy, loveListAstroReview));
+        loveAstroList.add(new AstrolgerModel(28, "Preeti", R.drawable.astro_l_f_6, "Love Astrologer", "8 years of experience", "Gujarati, English", "Preeti is a Love Astrologer with 8 years of experience, proficient in Gujarati and English. She specializes in love and romance predictions.", "Ahmedabad, Gujarat, India", Utils.loveAstroPhoneNumberDummy, loveListAstroReview));
+        loveAstroList.add(new AstrolgerModel(29, "Ritika", R.drawable.astro_l_f_7, "Love Astrologer", "8 years of experience", "Gujarati, English", "Ritika is a Love Astrologer with 8 years of experience, proficient in Gujarati and English. She specializes in love and romance predictions.", "Ahmedabad, Gujarat, India", Utils.loveAstroPhoneNumberDummy, loveListAstroReview));
+        loveAstroList.add(new AstrolgerModel(30, "Isha", R.drawable.astro_l_f_8, "Love Astrologer", "8 years of experience", "Gujarati, English", "Isha is a Love Astrologer with 8 years of experience, proficient in Gujarati and English. She specializes in love and romance predictions.", "Ahmedabad, Gujarat, India", Utils.loveAstroPhoneNumberDummy, loveListAstroReview));
 
     }
 
@@ -392,6 +373,7 @@ public class HomeFragment extends Fragment {
                 intent.putExtra("userReviewsJson", userReviewsJson);
                 intent.putExtra("Address", astrologer.getAddress());
                 intent.putExtra("phoneNumber", astrologer.getPhoneNumber());
+                intent.putExtra("userId", String.valueOf(astrologer.getId()));
                 // Start the ProfileActivity
                 startActivity(intent);
             }
@@ -412,6 +394,7 @@ public class HomeFragment extends Fragment {
                 intent.putExtra("userReviewsJson", userReviewsJson);
                 intent.putExtra("Address", astrologer.getAddress());
                 intent.putExtra("phoneNumber", astrologer.getPhoneNumber());
+                intent.putExtra("userId", String.valueOf(astrologer.getId()));
                 // Start the ProfileActivity
                 startActivity(intent);
             }
@@ -432,6 +415,7 @@ public class HomeFragment extends Fragment {
                 intent.putExtra("userReviewsJson", userReviewsJson);
                 intent.putExtra("Address", astrologer.getAddress());
                 intent.putExtra("phoneNumber", astrologer.getPhoneNumber());
+                intent.putExtra("userId", String.valueOf(astrologer.getId()));
                 // Start the ProfileActivity
                 startActivity(intent);
             }
@@ -453,6 +437,7 @@ public class HomeFragment extends Fragment {
                 intent.putExtra("userReviewsJson", userReviewsJson);
                 intent.putExtra("Address", astrologer.getAddress());
                 intent.putExtra("phoneNumber", astrologer.getPhoneNumber());
+                intent.putExtra("userId", String.valueOf(astrologer.getId()));
                 // Start the ProfileActivity
                 startActivity(intent);
             }

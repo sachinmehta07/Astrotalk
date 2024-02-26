@@ -167,14 +167,11 @@ public class DashboardActivity extends AppCompatActivity {
                 Fragment currentFragment = fragmentManager.findFragmentById(R.id.flHomeScreenMain);
 
                 if (menuItem.replace(" ", "").equalsIgnoreCase(homeMenu.HOME.toString())) {
-
-                    if (currentFragment instanceof HomeFragment) {
-                        homeScreenBinding.drawerLayoutHome.closeDrawer(GravityCompat.START);
-                    } else {
+                    homeScreenBinding.drawerLayoutHome.closeDrawer(GravityCompat.START);
+                    if (!(currentFragment instanceof HomeFragment)) {
+                        homeScreenContentMainBinding.bnBarHomeScreen.setSelectedItemId(R.id.navHome);
+                        homeScreenContentMainBinding.bnBarHomeScreen.setSelectedItemId(R.id.navHome);
                         replaceFragments(new HomeFragment());
-                        homeScreenBinding.drawerLayoutHome.closeDrawer(GravityCompat.START);
-                        homeScreenContentMainBinding.bnBarHomeScreen.setSelectedItemId(R.id.navHome);
-                        homeScreenContentMainBinding.bnBarHomeScreen.setSelectedItemId(R.id.navHome);
                     }
                 } else if (menuItem.replace(" ", "").equalsIgnoreCase(homeMenu.Chat.toString())) {
                     if (currentFragment instanceof ChatFragment) {
@@ -186,24 +183,19 @@ public class DashboardActivity extends AppCompatActivity {
                     }
                 } else if (menuItem.replace(" ", "").equalsIgnoreCase(homeMenu.Logout.toString())) {
                     SharedPreferenceManager.getInstance(DashboardActivity.this).clearUserLoggedIn();
-                    SharedPreferenceManager.getInstance(DashboardActivity.this).clearUserLoggedIn();
                     FirebaseAuth.getInstance().signOut();
                     startActivity(new Intent(DashboardActivity.this, LoginActivity.class));
                 } else if (menuItem.replace(" ", "").equalsIgnoreCase(homeMenu.Pooja.toString())) {
-                    if (currentFragment instanceof PoojaFragment) {
-                        homeScreenBinding.drawerLayoutHome.closeDrawer(GravityCompat.START);
-                    } else {
-                        replaceFragments(new PoojaFragment());
-                        homeScreenBinding.drawerLayoutHome.closeDrawer(GravityCompat.START);
+                    homeScreenBinding.drawerLayoutHome.closeDrawer(GravityCompat.START);
+                    if (!(currentFragment instanceof PoojaFragment)) {
                         homeScreenContentMainBinding.bnBarHomeScreen.setSelectedItemId(R.id.navPooja);
+                        replaceFragments(new PoojaFragment());
                     }
                 } else if (menuItem.replace(" ", "").equalsIgnoreCase(homeMenu.calls.toString())) {
-                    if (currentFragment instanceof CallFragment) {
-                        homeScreenBinding.drawerLayoutHome.closeDrawer(GravityCompat.START);
-                    } else {
-                        replaceFragments(new PoojaFragment());
-                        homeScreenBinding.drawerLayoutHome.closeDrawer(GravityCompat.START);
+                    homeScreenBinding.drawerLayoutHome.closeDrawer(GravityCompat.START);
+                    if (!(currentFragment instanceof CallFragment)) {
                         homeScreenContentMainBinding.bnBarHomeScreen.setSelectedItemId(R.id.navCall);
+                        replaceFragments(new CallFragment());
                     }
                 }
             }
