@@ -25,13 +25,14 @@ public class SplashActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                if(SharedPreferenceManager.getInstance(SplashActivity.this).isUserLoggedIn()){
+                if (SharedPreferenceManager.getInstance(SplashActivity.this).isUserLoggedIn()) {
                     startActivity(new Intent(SplashActivity.this, DashboardActivity.class));
-                }else {
+                    finish();
+                } else {
                     startActivity(new Intent(SplashActivity.this, LoginActivity.class));
+                    finish();
                 }
-
             }
-        }, 3000);
+        }, 2000);
     }
 }

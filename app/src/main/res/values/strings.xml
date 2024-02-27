@@ -12,6 +12,8 @@
     <string name="tajika">Marriage  Astrologers</string>
     <string name="call">Call</string>
     <string name="chat">Chat</string>
+    <string name="pooja_name_format">%1$s %2$s</string>
+    <string name="pooja_name_label">Pooja Name: </string>
     <string name="love_astrology">Love Astrologers</string>
     <string name="todo">TODO</string>
     <string name="write_message_here">Write message here</string>
@@ -20,4 +22,10 @@
     <string name="call_to_astrologer">Call to Astrologer</string>
     <string name="chat_with_astrolger">Chat with Astrologer</string>
     <string name="astrologers">Astrologers</string>
+    <string name="comming_soon">Coming soon</string>
+    <string name="book_now">Book Now</string>
+    <string name="pooja_title">Pooja Title</string>
+    <string name="pooja_description">Pooja Description</string>
+    <string name="search_here">Search Here</string>
+    <string name="pooja_near_you">Pooja Near You</string>
 </resources>

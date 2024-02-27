@@ -159,7 +159,7 @@ public class ChatFragment extends Fragment {
         UserReviewBaseDataList.add(new UserReviewModel(R.drawable.tst_22, "Varun", 5, "Exceptional service! The astrologer's predictions were on point, and the guidance provided was extremely helpful."));
 
         UserReviewBaseDataList.add(new UserReviewModel(R.drawable.tst_1, "Rahul", 5, "Amazing astrologer! Predictions were spot on and helped me navigate through career decisions."));
-        UserReviewBaseDataList.add(new UserReviewModel(R.drawable.tst_2, "Priya", 4, "Good insights into personal relationships. Predicted some key events in my life accurately."));
+        UserReviewBaseDataList.add(new UserReviewModel(R.drawable.tst_2, "Anuj", 4, "Good insights into personal relationships. Predicted some key events in my life accurately."));
         UserReviewBaseDataList.add(new UserReviewModel(R.drawable.tst_3, "Kiran", 3, "Average experience. Some predictions were accurate, while others were off the mark."));
         UserReviewBaseDataList.add(new UserReviewModel(R.drawable.tst_f_5, "Neha", 5, "Exceptional astrologer! Provided deep insights into my life, and the guidance was invaluable."));
         UserReviewBaseDataList.add(new UserReviewModel(R.drawable.tst_4, "Vikram", 4, "Satisfactory predictions. Helped me understand the challenges ahead and how to overcome them."));
