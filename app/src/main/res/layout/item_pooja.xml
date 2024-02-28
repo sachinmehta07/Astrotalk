@@ -65,7 +65,7 @@
                 android:layout_alignStart="@+id/pooja_title"
                 android:layout_marginTop="@dimen/_10sdp"
                 android:fontFamily="@font/poppins_regular"
-                android:text="@string/pooja_description"
+                android:text=""
                 android:textSize="@dimen/_9ssp" />
 
             <androidx.appcompat.widget.AppCompatButton

@@ -25,7 +25,12 @@
     <string name="comming_soon">Coming soon</string>
     <string name="book_now">Book Now</string>
     <string name="pooja_title">Pooja Title</string>
-    <string name="pooja_description">Pooja Description</string>
+
     <string name="search_here">Search Here</string>
     <string name="pooja_near_you">Pooja Near You</string>
+    <string name="proceed">Proceed</string>
+    <string name="google_pay">Google Pay</string>
+    <string name="select_payment_option">Select Payment Option</string>
+    <string name="total_payment">Total Payment :</string>
+
 </resources>
