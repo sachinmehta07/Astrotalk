@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.app.astrotalk.R;
@@ -25,6 +26,14 @@ public class PaymentSelectionActivity extends AppCompatActivity {
         // Deserialize JSON to PoojaBookModel object
         Gson gson = new Gson();
         PoojaBookModel poojaBookModel = gson.fromJson(poojaJson, PoojaBookModel.class);
+        TextView textView = findViewById(R.id.txtTxtPrice);
+        textView.setText(String.format("%srs", String.valueOf(poojaBookModel.getPrice())));
+        findViewById(R.id.ivMenu).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         findViewById(R.id.btnProceed).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

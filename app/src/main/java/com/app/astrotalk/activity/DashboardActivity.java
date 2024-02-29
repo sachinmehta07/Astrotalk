@@ -106,11 +106,11 @@ public class DashboardActivity extends AppCompatActivity {
         //All Click Home
         onClickListeners();
         arrayDataAdd();
-//        if(getIntent().hasExtra("isFromProductPageActivity")) {
-//            if(getIntent().getStringExtra("isFromProductPageActivity").equals("true")){
-//                replaceFragments(new CartFragment());
-//            }
-//        }
+        if (getIntent().hasExtra("isFromSuccess")) {
+            if (Objects.equals(getIntent().getStringExtra("isFromSuccess"), "true")) {
+                replaceFragments(new HomeFragment());
+            }
+        }
 
         //Default Fragment Load
 //        if(getIntent().hasExtra("isFromProductListActivity")) {
@@ -274,16 +274,54 @@ public class DashboardActivity extends AppCompatActivity {
         Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialogView.setBackgroundResource(R.drawable.dialog_bg);
 
-
         Button btnYes = dialogView.findViewById(R.id.btn_yes);
         Button btnNo = dialogView.findViewById(R.id.btn_no);
-
 
         btnYes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
                 finishAffinity();
+            }
+        });
+
+        btnNo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        // Show the dialog
+        dialog.show();
+    }
+
+    private void showLogoutDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.dialog_exit, null);
+        builder.setView(dialogView);
+
+        TextView title = dialogView.findViewById(R.id.text_title);
+        title.setText("Are you sure you want to logout");
+
+// Create the dialog instance
+        final AlertDialog dialog = builder.create();
+
+// Now you can access the dialog's window and set its background
+        Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialogView.setBackgroundResource(R.drawable.dialog_bg);
+
+        Button btnYes = dialogView.findViewById(R.id.btn_yes);
+        Button btnNo = dialogView.findViewById(R.id.btn_no);
+
+        btnYes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                SharedPreferenceManager.getInstance(DashboardActivity.this).clearUserLoggedIn();
+                FirebaseAuth.getInstance().signOut();
+                startActivity(new Intent(DashboardActivity.this, LoginActivity.class));
+
             }
         });
 

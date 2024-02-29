@@ -32,11 +32,9 @@ public class SuccessBookActivity extends AppCompatActivity {
 
         // Update XML layout with data
         if (poojaBookModel != null) {
-
             binding.poojaTitle.setText(poojaBookModel.getPoojaName());
             binding.poojaBenefit.setText(poojaBookModel.getPoojaBenefits());
             binding.poojaGodDetails.setText(poojaBookModel.getPoojaGodDetails());
-
         }
         binding.btnSeeBooking.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -45,11 +43,20 @@ public class SuccessBookActivity extends AppCompatActivity {
             }
         });
 
+        binding.ivMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+
     }
 
     @SuppressLint("MissingSuperCall")
     @Override
     public void onBackPressed() {
-        startActivity(new Intent(SuccessBookActivity.this, BookingDetailsActivity.class));
+        Intent iNxt = new Intent(SuccessBookActivity.this, DashboardActivity.class);
+        iNxt.putExtra("isFromSuccess", "true");
+        startActivity(iNxt);
     }
 }

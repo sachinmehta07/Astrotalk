@@ -32,5 +32,8 @@
     <string name="google_pay">Google Pay</string>
     <string name="select_payment_option">Select Payment Option</string>
     <string name="total_payment">Total Payment :</string>
+    <string name="your_booked_pooja">Pooja booked</string>
+    <string name="see_details">See Details</string>
+    <string name="pooja_details">Pooja Details</string>
 
 </resources>

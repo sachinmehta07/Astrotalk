@@ -25,7 +25,7 @@
             android:layout_height="@dimen/_30sdp"
             android:layout_marginStart="@dimen/_8sdp"
             android:padding="@dimen/_8sdp"
-            android:src="@drawable/menu_ic"
+            android:src="@drawable/back"
             android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"

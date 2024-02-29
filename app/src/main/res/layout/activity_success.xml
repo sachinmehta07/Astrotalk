@@ -23,7 +23,7 @@
             android:layout_height="@dimen/_30sdp"
             android:layout_marginStart="@dimen/_8sdp"
             android:padding="@dimen/_8sdp"
-            android:src="@drawable/menu_ic"
+            android:src="@drawable/back"
             android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -97,7 +97,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:background="@drawable/bg_cat"
             android:backgroundTint="#00000000"
             app:layout_constraintTop_toBottomOf="@+id/imOrderSuccess"
@@ -126,7 +126,6 @@
                 android:text="@string/pooja_title"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_12ssp" />
-
 
             <TextView
                 android:id="@+id/txtTitleDesc"
