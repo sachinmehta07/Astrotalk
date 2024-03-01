@@ -52,7 +52,7 @@ public class BookingDetailsActivity extends AppCompatActivity {
             binding.poojaGodDetails.setText(poojaBookModel.getPoojaGodDetails());
 
             // Assuming price is available in poojaBookModel, set it to the TextView
-            binding.txtPrice.setText(String.format("%srs", String.valueOf(poojaBookModel.getPrice())));
+            binding.txtPrice.setText(String.format("Price : " + "%srs", String.valueOf(poojaBookModel.getPrice())));
         }
 
     }

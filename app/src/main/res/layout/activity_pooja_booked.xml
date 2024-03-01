@@ -138,9 +138,43 @@
         android:nestedScrollingEnabled="false"
         android:orientation="vertical"
         android:paddingBottom="@dimen/_100sdp"
+        android:visibility="visible"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/clSearchView"
         tools:listitem="@layout/item_pooja_booked" />
+
+
+    <TextView
+        android:id="@+id/txtEmptyMsg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/_20sdp"
+        android:fontFamily="@font/poppins_regular"
+        android:paddingHorizontal="@dimen/_5sdp"
+        android:text="@string/empty_msg"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_15ssp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/btnBook"
+        app:layout_constraintEnd_toEndOf="@+id/btnBook"
+        app:layout_constraintStart_toStartOf="@+id/btnBook" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnBook"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/btnbg"
+        android:fontFamily="@font/poppins_bold"
+        android:paddingHorizontal="@dimen/_40sdp"
+        android:text="@string/book_your_first_pooja"
+        android:textAllCaps="false"
+        android:textSize="@dimen/_12ssp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout2" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

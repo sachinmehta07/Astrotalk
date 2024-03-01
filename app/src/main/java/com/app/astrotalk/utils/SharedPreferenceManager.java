@@ -3,6 +3,7 @@ package com.app.astrotalk.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.app.astrotalk.model.PoojaBookModel;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -32,23 +33,51 @@ public class SharedPreferenceManager {
         editor.putString(key, messagesJson);
         editor.apply();
     }
+
     // Updated method to get chat messages as a list
     public List<String> getChatMessages(String key) {
         String messagesJson = sharedPreferences.getString(key, "");
 
         if (!messagesJson.isEmpty()) {
             Gson gson = new Gson();
-            Type type = new TypeToken<List<String>>() {}.getType();
+            Type type = new TypeToken<List<String>>() {
+            }.getType();
             return gson.fromJson(messagesJson, type);
         } else {
             return new ArrayList<>();
         }
     }
+
     public static synchronized SharedPreferenceManager getInstance(Context context) {
         if (instance == null) {
             instance = new SharedPreferenceManager(context);
         }
         return instance;
+    }
+
+    public void setPoojaBooked(int poojaId, PoojaBookModel poojaBookModel) {
+        String key = "pooja_" + poojaId;
+        Gson gson = new Gson();
+        String poojaJson = gson.toJson(poojaBookModel);
+
+        // Check if the Pooja with the same ID already exists in SharedPreferences
+        if (!sharedPreferences.contains(key)) {
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString(key, poojaJson);
+            editor.apply();
+        }
+    }
+
+    public PoojaBookModel getPoojaBooked(int poojaId) {
+        String key = "pooja_" + poojaId;
+        String poojaJson = sharedPreferences.getString(key, "");
+
+        if (!poojaJson.isEmpty()) {
+            Gson gson = new Gson();
+            return gson.fromJson(poojaJson, PoojaBookModel.class);
+        } else {
+            return null;
+        }
     }
 
     public void setUserLoggedIn(boolean loggedIn) {
@@ -73,6 +102,13 @@ public class SharedPreferenceManager {
     public void setUserName(String userName) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(KEY_USER_NAME, userName);
+        editor.apply();
+    }
+
+    public void removePoojaBooked(int poojaId) {
+        String key = "pooja_" + poojaId;
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.remove(key);
         editor.apply();
     }
 

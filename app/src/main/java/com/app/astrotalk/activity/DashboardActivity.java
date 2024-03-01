@@ -36,6 +36,7 @@ import com.app.astrotalk.fragmments.PoojaFragment;
 import com.app.astrotalk.listeners.OnMenuItemClickListener;
 import com.app.astrotalk.model.HomeMenuModel;
 import com.app.astrotalk.utils.SharedPreferenceManager;
+import com.app.astrotalk.utils.Utils;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -44,10 +45,8 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class DashboardActivity extends AppCompatActivity {
-    FirebaseAuth auth;
-    //    Button button;
-//    TextView textView;
-    FirebaseUser user;
+    private FirebaseAuth auth;
+    private FirebaseUser user;
 
     private HomeMenuOptionBinding homeScreenBinding;
     private HomeContentMainBinding homeScreenContentMainBinding;
@@ -62,39 +61,21 @@ public class DashboardActivity extends AppCompatActivity {
         homeScreenBinding = HomeMenuOptionBinding.inflate(getLayoutInflater());
         homeScreenContentMainBinding = homeScreenBinding.homeContetntLay;
         setContentView(homeScreenBinding.getRoot());
-
         getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.white));
 
         auth = FirebaseAuth.getInstance();
-//        button = findViewById(R.id.logout);
-//        textView = findViewById(R.id.user_details);
         user = auth.getCurrentUser();
-//        if (user == null) {
-//            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-//            startActivity(intent);
-//            finish();
-//        } else {
-//            textView.setText(user.getEmail());
-//        }
-//        button.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                FirebaseAuth.getInstance().signOut();
-//                startActivity(new Intent(DashboardActivity.this, LoginActivity.class));
-//            }
-//        });
-
+        if (auth.getCurrentUser() != null) {
+            Utils.isUserLogin = false;
+        } else {
+            Utils.isUserLogin = true;
+        }
 
         headerView = homeScreenBinding.nvHomeMenu.getHeaderView(0);
         headerBinding = NavigationDrawerHeaderBinding.bind(headerView);
-
-//        homeScreenContentMainBinding.bnBarHomeScreen.setSelectedItemId(R.id.navHome);
-
         headerBinding.txUserNameDisplay.setText(SharedPreferenceManager.getInstance(this).getUserName());
-
         fragmentManager = getSupportFragmentManager();
 
-//        replaceFragments(new HomeScreenFragment(),R.id.navHome);
 
         headerBinding.headerUserProfile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -106,22 +87,15 @@ public class DashboardActivity extends AppCompatActivity {
         //All Click Home
         onClickListeners();
         arrayDataAdd();
-        if (getIntent().hasExtra("isFromSuccess")) {
-            if (Objects.equals(getIntent().getStringExtra("isFromSuccess"), "true")) {
-                replaceFragments(new HomeFragment());
-            }
+        if (getIntent().hasExtra("isFromSuccess") || getIntent().hasExtra("isFromDashBoard")) {
+            replaceFragments(new HomeFragment());
+            homeScreenContentMainBinding.bnBarHomeScreen.setSelectedItemId(R.id.navHome);
         }
-
         //Default Fragment Load
-//        if(getIntent().hasExtra("isFromProductListActivity")) {
-//            if(getIntent().getStringExtra("isFromProductListActivity").equals("true") ){
-//                replaceFragments(new CartFragment());
-//
-//            }
-//        }
-//        else {
-//
-//        }
+        if (getIntent().hasExtra("IsFromBookNow")) {
+            replaceFragments(new PoojaFragment());
+            homeScreenContentMainBinding.bnBarHomeScreen.setSelectedItemId(R.id.navPooja);
+        }
     }
 
     public void onClickListeners() {
@@ -159,6 +133,7 @@ public class DashboardActivity extends AppCompatActivity {
         homeMenuModelArrayList.add(new HomeMenuModel(R.drawable.ic_chat, "Chat", "Engage in direct conversations"));
         homeMenuModelArrayList.add(new HomeMenuModel(R.drawable.ic_call, "calls", "Connect with Astrologers instantly calls."));
         homeMenuModelArrayList.add(new HomeMenuModel(R.drawable.ic_pooja, "Pooja", "Book personalized Pooja sessions"));
+        homeMenuModelArrayList.add(new HomeMenuModel(R.drawable.pooja, "Booked Pooja", "View and manage your scheduled Pooja sessions"));
         homeMenuModelArrayList.add(new HomeMenuModel(R.drawable.logout_ic, "Logout", "Securely log out from the app"));
 
         HomeMenuAdapter homeMenuAdapter = new HomeMenuAdapter(homeMenuModelArrayList, new OnMenuItemClickListener() {
@@ -182,9 +157,7 @@ public class DashboardActivity extends AppCompatActivity {
                         homeScreenContentMainBinding.bnBarHomeScreen.setSelectedItemId(R.id.navChat);
                     }
                 } else if (menuItem.replace(" ", "").equalsIgnoreCase(homeMenu.Logout.toString())) {
-                    SharedPreferenceManager.getInstance(DashboardActivity.this).clearUserLoggedIn();
-                    FirebaseAuth.getInstance().signOut();
-                    startActivity(new Intent(DashboardActivity.this, LoginActivity.class));
+                    showLogoutDialog();
                 } else if (menuItem.replace(" ", "").equalsIgnoreCase(homeMenu.Pooja.toString())) {
                     homeScreenBinding.drawerLayoutHome.closeDrawer(GravityCompat.START);
                     if (!(currentFragment instanceof PoojaFragment)) {
@@ -197,6 +170,11 @@ public class DashboardActivity extends AppCompatActivity {
                         homeScreenContentMainBinding.bnBarHomeScreen.setSelectedItemId(R.id.navCall);
                         replaceFragments(new CallFragment());
                     }
+                } else if (menuItem.replace(" ", "").equalsIgnoreCase(homeMenu.BookedPooja.toString())) {
+                    homeScreenBinding.drawerLayoutHome.closeDrawer(GravityCompat.START);
+                    Intent intent = new Intent(DashboardActivity.this, PoojaBookedActivity.class);
+                    intent.putExtra("isFromDashBoard", "true");
+                    startActivity(intent);
                 }
             }
         });
@@ -252,7 +230,7 @@ public class DashboardActivity extends AppCompatActivity {
     }
 
     public enum homeMenu {
-        HOME, Chat, calls, Pooja, Logout,
+        HOME, Chat, calls, Pooja, Logout, BookedPooja,
     }
 
     public void setUserData(String text) {
@@ -302,7 +280,7 @@ public class DashboardActivity extends AppCompatActivity {
         builder.setView(dialogView);
 
         TextView title = dialogView.findViewById(R.id.text_title);
-        title.setText("Are you sure you want to logout");
+        title.setText(R.string.msg_logout);
 
 // Create the dialog instance
         final AlertDialog dialog = builder.create();

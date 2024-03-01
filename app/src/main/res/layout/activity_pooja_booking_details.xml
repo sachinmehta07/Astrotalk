@@ -149,6 +149,7 @@
         android:layout_height="wrap_content"
         android:background="@color/c_F5F5F5"
         android:orientation="horizontal"
+        android:paddingVertical="@dimen/_5sdp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 

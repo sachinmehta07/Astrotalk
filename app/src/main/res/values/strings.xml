@@ -35,5 +35,10 @@
     <string name="your_booked_pooja">Pooja booked</string>
     <string name="see_details">See Details</string>
     <string name="pooja_details">Pooja Details</string>
+    <string name="msg_logout">Are you sure you want to logout</string>
+    <string name="book_your_first_pooja">Book your first pooja</string>
+    <string name="empty_msg">Start by booking your first Pooja session to begin your spiritual journey.</string>
+    <string name="cancel_booking">Cancel booking</string>
+    <string name="are_you_sure_you_want_to_cancel">Are you sure you want to cancel?</string>
 
 </resources>
