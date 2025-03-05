@@ -102,7 +102,7 @@ public class LoveCategoryAdapter extends RecyclerView.Adapter<LoveCategoryAdapte
     public void filter(String charText) {
         this.homeList.clear();
         // Assume no data is found initially
-        if (charText.toLowerCase(Locale.getDefault()).length() == 0) {
+        if (charText.toLowerCase(Locale.getDefault()).isEmpty()) {
             this.homeList.addAll(filterList);
             // Set data found to true when the search text is empty
         } else {

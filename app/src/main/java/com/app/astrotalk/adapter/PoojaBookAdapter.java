@@ -91,7 +91,7 @@ public class PoojaBookAdapter extends RecyclerView.Adapter<PoojaBookAdapter.Pooj
     public void filter(String charText) {
         this.poojaList.clear();
         // Assume no data is found initially
-        if (charText.toLowerCase(Locale.getDefault()).length() == 0) {
+        if (charText.toLowerCase(Locale.getDefault()).isEmpty()) {
             this.poojaList.addAll(filterList);
             // Set data found to true when the search text is empty
         } else {

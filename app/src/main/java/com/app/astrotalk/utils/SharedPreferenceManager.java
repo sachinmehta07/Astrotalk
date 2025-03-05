@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 public class SharedPreferenceManager {
+
     private static final String SHARED_PREF_NAME = "my_shared_pref";
     private static final String KEY_USER_LOGGED_IN = "user_logged_in";
     private static final String KEY_USER_NAME = "user_name"; // New key for user name
@@ -24,7 +25,9 @@ public class SharedPreferenceManager {
     }
 
     public void setChatMessages(String userId, List<String> chatMessages) {
+
         Gson gson = new Gson();
+
         String messagesJson = gson.toJson(chatMessages);
 
         String key = "chat_" + userId;
@@ -36,6 +39,7 @@ public class SharedPreferenceManager {
 
     // Updated method to get chat messages as a list
     public List<String> getChatMessages(String key) {
+
         String messagesJson = sharedPreferences.getString(key, "");
 
         if (!messagesJson.isEmpty()) {
@@ -56,8 +60,11 @@ public class SharedPreferenceManager {
     }
 
     public void setPoojaBooked(int poojaId, PoojaBookModel poojaBookModel) {
+
         String key = "pooja_" + poojaId;
+
         Gson gson = new Gson();
+
         String poojaJson = gson.toJson(poojaBookModel);
 
         // Check if the Pooja with the same ID already exists in SharedPreferences

@@ -1,5 +1,6 @@
 package com.app.astrotalk.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,12 +24,14 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatModelViewH
         this.context = context;
         this.chatList = new ArrayList<>();
     }
+    @SuppressLint("NotifyDataSetChanged")
     public void setChatList(List<String> chatList) {
         this.chatList = chatList;
         notifyDataSetChanged();
     }
 
 
+    @SuppressLint("NotifyDataSetChanged")
     public void addMessage(String message) {
         chatList.add(message);
         notifyDataSetChanged();
@@ -82,6 +85,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatModelViewH
             rightChatLayout = itemView.findViewById(R.id.right_chat_layout);
             leftChatTextview = itemView.findViewById(R.id.left_chat_textview);
             rightChatTextview = itemView.findViewById(R.id.right_chat_textview);
+
         }
     }
 }

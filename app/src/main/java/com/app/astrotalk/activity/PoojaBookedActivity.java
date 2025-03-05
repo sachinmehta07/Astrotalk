@@ -53,7 +53,7 @@ public class PoojaBookedActivity extends AppCompatActivity {
                 if (Utils.isNetworkAvailable(PoojaBookedActivity.this)) {
                     adapter.filter(cs.toString());
                     binding.ivRemove.setVisibility(VISIBLE);
-                    if (adapter != null) if ((adapter.poojaList.size() == 0)) {
+                    if (adapter != null) if ((adapter.poojaList.isEmpty())) {
                         binding.txNoResult.setVisibility(VISIBLE);
                     } else {
                         binding.txNoResult.setVisibility(GONE);

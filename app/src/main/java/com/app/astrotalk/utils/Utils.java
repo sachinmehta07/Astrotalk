@@ -1,19 +1,36 @@
 package com.app.astrotalk.utils;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkCapabilities;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+
+import androidx.appcompat.app.AlertDialog;
 
 import com.app.astrotalk.R;
+import com.app.astrotalk.activity.DashboardActivity;
+import com.app.astrotalk.activity.LoginActivity;
+import com.app.astrotalk.activity.SignupActivity;
 import com.app.astrotalk.model.PoojaBookModel;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Utils {
     public static String searchTextValue;
 
     public static boolean isUserLogin = false;
+
+
     //Add Your Sample Phone Number
     public static String vedicAstroPhoneNumberDummy = "8320577653";
     public static String loveAstroPhoneNumberDummy = "8320577653";
@@ -36,6 +53,7 @@ public class Utils {
     }
 
     public static List<PoojaBookModel> getPoojaBookList() {
+
         List<PoojaBookModel> poojaBookList = new ArrayList<>();
         // Add data to poojaBookList
         poojaBookList.add(new PoojaBookModel(R.drawable.pooj_20, 1, "Ganesh Puja", "Ganesh Puja is a Hindu festival that celebrates the birth of Lord Ganesha, the elephant-headed god of wisdom and good beginnings. It is one of the most popular festivals in India and is celebrated by Hindus all over the world.", "Ganesh Puja", "Ganesh Puja is believed to bring good luck, prosperity, and wisdom. It is also a time for families to come together and celebrate.", "Lord Ganesha is the son of Lord Shiva and Parvati. He is known for his wisdom, intelligence, and ability to remove obstacles. He is also worshipped as the god of beginnings, new ventures, and education.", 2000));
@@ -54,5 +72,69 @@ public class Utils {
         poojaBookList.add(new PoojaBookModel(R.drawable.pooja_16, 13, "Guru Purnima", "Guru Purnima is a Hindu festival that honors spiritual teachers and gurus. It is celebrated on the full moon day of the Hindu month of Ashadha, which usually falls in July.", "Guru Purnima", "Guru Purnima is believed to bring blessings, wisdom, and guidance. It is also a time for students to express their gratitude to their teachers.", "The festival is not directly associated with a specific deity, but it is a time to remember and honor all spiritual teachers who have guided us on our life's journey.", 1200));
         poojaBookList.add(new PoojaBookModel(R.drawable.pooja_17, 14, "Shravan", "Shravan is a holy month in the Hindu calendar, dedicated to Lord Shiva. It is the fifth month of the lunar year, usually falling in July and August. During this month, devotees observe various rituals and fasts to seek blessings from Lord Shiva.", "Shravan", "Observing Shravan is believed to bring blessings, peace, and good health. It is also a time for spiritual introspection and devotion.", "Lord Shiva is one of the three principal deities of Hinduism. He is associated with destruction, creation, and transformation.", 4500));
         return poojaBookList;
+    }
+
+    public static void showLoginDialog(Context context, String title, Runnable onLoginAction) {
+        if (!(context instanceof Activity)) {
+            return; // Ensure we have a valid Activity context
+        }
+
+        Activity activity = (Activity) context;
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        LayoutInflater inflater = activity.getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.dialog_exit, null);
+        builder.setView(dialogView);
+
+        TextView titleView = dialogView.findViewById(R.id.text_title);
+        titleView.setText(title);
+
+        // Create the dialog instance
+        final AlertDialog dialog = builder.create();
+
+        // Set transparent background and apply custom background drawable
+        Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialogView.setBackgroundResource(R.drawable.dialog_bg);
+
+        Button btnYes = dialogView.findViewById(R.id.btn_yes);
+        Button btnNo = dialogView.findViewById(R.id.btn_no);
+
+        btnYes.setText(R.string.sign_in_login);
+
+        btnYes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                dialog.dismiss();
+
+                context.startActivity(new Intent(context, SignupActivity.class));
+
+
+            }
+        });
+
+        btnNo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        // Show the dialog
+        dialog.show();
+    }
+
+    /**
+     * Simplified version of login dialog without custom actions
+     */
+    public static void showLoginDialog(Context context, String title) {
+        showLoginDialog(context, title, null);
+    }
+
+    /**
+     * Shows login dialog with default title
+     */
+    public static void showLoginDialog(Context context) {
+        showLoginDialog(context, context.getString(R.string.login_required));
     }
 }

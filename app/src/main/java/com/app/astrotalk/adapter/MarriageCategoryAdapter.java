@@ -19,7 +19,6 @@ import java.util.Locale;
 
 public class MarriageCategoryAdapter extends RecyclerView.Adapter<MarriageCategoryAdapter.ViewHolder> {
     private Context context;
-
     public List<AstrolgerModel> homeList = new ArrayList<>();
     public List<AstrolgerModel> filterList = new ArrayList<>();
 
@@ -101,7 +100,7 @@ public class MarriageCategoryAdapter extends RecyclerView.Adapter<MarriageCatego
     public void filter(String charText) {
         this.homeList.clear();
         // Assume no data is found initially
-        if (charText.toLowerCase(Locale.getDefault()).length() == 0) {
+        if (charText.toLowerCase(Locale.getDefault()).isEmpty()) {
             this.homeList.addAll(filterList);
             // Set data found to true when the search text is empty
         } else {

@@ -36,9 +36,17 @@
     <string name="see_details">See Details</string>
     <string name="pooja_details">Pooja Details</string>
     <string name="msg_logout">Are you sure you want to logout</string>
+    <string name="login_required">Login Required</string>
     <string name="book_your_first_pooja">Book your first pooja</string>
     <string name="empty_msg">Start by booking your first Pooja session to begin your spiritual journey.</string>
     <string name="cancel_booking">Cancel booking</string>
     <string name="are_you_sure_you_want_to_cancel">Are you sure you want to cancel?</string>
+    <string name="enter_room_name">Enter Room Name</string>
+    <string name="create_room_or_join_room">Create Room or Join Room</string>
+    <string name="hello">hello</string>
+    <string name="sign_in_login">Sign in / Login</string>
+    <string name="login_chat">Login to Chat with Astrologers</string>
+    <string name="login_call">Login to call with Astrologers</string>
+    <string name="login_pooja">Login to Book Pooja</string>
 
 </resources>

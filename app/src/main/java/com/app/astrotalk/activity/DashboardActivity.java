@@ -1,5 +1,8 @@
 package com.app.astrotalk.activity;
 
+import static android.view.View.VISIBLE;
+
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,6 +13,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -47,7 +51,6 @@ import java.util.Objects;
 public class DashboardActivity extends AppCompatActivity {
     private FirebaseAuth auth;
     private FirebaseUser user;
-
     private HomeMenuOptionBinding homeScreenBinding;
     private HomeContentMainBinding homeScreenContentMainBinding;
     private final ArrayList<HomeMenuModel> homeMenuModelArrayList = new ArrayList<>();
@@ -58,22 +61,36 @@ public class DashboardActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         homeScreenBinding = HomeMenuOptionBinding.inflate(getLayoutInflater());
         homeScreenContentMainBinding = homeScreenBinding.homeContetntLay;
         setContentView(homeScreenBinding.getRoot());
-        getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.white));
+        //getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.app_theme));
 
         auth = FirebaseAuth.getInstance();
+
         user = auth.getCurrentUser();
-        if (auth.getCurrentUser() != null) {
-            Utils.isUserLogin = false;
-        } else {
-            Utils.isUserLogin = true;
-        }
+
+        Utils.isUserLogin = auth.getCurrentUser() != null;
 
         headerView = homeScreenBinding.nvHomeMenu.getHeaderView(0);
+
         headerBinding = NavigationDrawerHeaderBinding.bind(headerView);
-        headerBinding.txUserNameDisplay.setText(SharedPreferenceManager.getInstance(this).getUserName());
+
+
+        if (SharedPreferenceManager.getInstance(this).getUserName().isBlank()) {
+            headerBinding.txtGuestLogin.setVisibility(VISIBLE);
+        } else {
+            headerBinding.txUserNameDisplay.setText(SharedPreferenceManager.getInstance(this).getUserName());
+        }
+
+        headerBinding.cvUserLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(DashboardActivity.this, SignupActivity.class));
+            }
+        });
+
         fragmentManager = getSupportFragmentManager();
 
 
@@ -121,9 +138,11 @@ public class DashboardActivity extends AppCompatActivity {
                     replaceFragments(new PoojaFragment());
                     return true;
                 }
+
                 return false;
             }
         });
+
         homeScreenContentMainBinding.bnBarHomeScreen.setSelectedItemId(R.id.navHome);
     }
 
@@ -134,7 +153,10 @@ public class DashboardActivity extends AppCompatActivity {
         homeMenuModelArrayList.add(new HomeMenuModel(R.drawable.ic_call, "calls", "Connect with Astrologers instantly calls."));
         homeMenuModelArrayList.add(new HomeMenuModel(R.drawable.ic_pooja, "Pooja", "Book personalized Pooja sessions"));
         homeMenuModelArrayList.add(new HomeMenuModel(R.drawable.pooja, "Booked Pooja", "View and manage your scheduled Pooja sessions"));
-        homeMenuModelArrayList.add(new HomeMenuModel(R.drawable.logout_ic, "Logout", "Securely log out from the app"));
+
+        if (!SharedPreferenceManager.getInstance(this).getUserName().isBlank()) {
+            homeMenuModelArrayList.add(new HomeMenuModel(R.drawable.logout_ic, "Logout", "Securely log out from the app"));
+        }
 
         HomeMenuAdapter homeMenuAdapter = new HomeMenuAdapter(homeMenuModelArrayList, new OnMenuItemClickListener() {
             @Override
@@ -193,12 +215,14 @@ public class DashboardActivity extends AppCompatActivity {
         Fragment currentFragment = fragmentManager.findFragmentById(R.id.flHomeScreenMain);
 
         if (currentFragment instanceof HomeFragment) {
+
             showExitDialog();
 
 
         } else if (currentFragment instanceof ChatFragment) {
 
             replaceFragments(new HomeFragment());
+
             homeScreenContentMainBinding.bnBarHomeScreen.setSelectedItemId(R.id.navHome);
 
         } else if (currentFragment instanceof CallFragment) {
@@ -223,20 +247,29 @@ public class DashboardActivity extends AppCompatActivity {
     }
 
     @SuppressLint("NonConstantResourceId")
-    public void replaceFragments(Fragment fragment) {
+    public void replaceFragments(Fragment newFragment) {
+
+
+        //thsi working but same frg coming realoding so many times
+//        FragmentTransaction transaction = fragmentManager.beginTransaction();
+//        transaction.replace(R.id.flHomeScreenMain, fragment);
+//        transaction.commit();
+
+        Fragment currentFragment = fragmentManager.findFragmentById(R.id.flHomeScreenMain);
+
+        // Check if the new fragment is the same as the current one
+        if (currentFragment != null && currentFragment.getClass().equals(newFragment.getClass())) {
+            return; // Do nothing if the same fragment is already displayed
+        }
+
         FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.replace(R.id.flHomeScreenMain, fragment);
+        transaction.replace(R.id.flHomeScreenMain, newFragment);
         transaction.commit();
+
     }
 
     public enum homeMenu {
         HOME, Chat, calls, Pooja, Logout, BookedPooja,
-    }
-
-    public void setUserData(String text) {
-
-        headerBinding.txUserNameDisplay.setText(text);
-
     }
 
     private void showExitDialog() {
@@ -274,6 +307,7 @@ public class DashboardActivity extends AppCompatActivity {
     }
 
     private void showLogoutDialog() {
+
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         LayoutInflater inflater = getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.dialog_exit, null);
@@ -312,5 +346,6 @@ public class DashboardActivity extends AppCompatActivity {
         // Show the dialog
         dialog.show();
     }
+
 
 }

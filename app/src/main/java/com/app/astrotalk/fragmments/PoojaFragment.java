@@ -23,6 +23,7 @@ import com.app.astrotalk.listeners.onPoojaItemClick;
 import com.app.astrotalk.model.AstrolgerModel;
 import com.app.astrotalk.model.PoojaBookModel;
 import com.app.astrotalk.utils.Utils;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -67,7 +68,7 @@ public class PoojaFragment extends Fragment {
                     adapter.filter(cs.toString());
                     binding.ivRemove.setVisibility(View.VISIBLE);
                     if (adapter != null)
-                        if ((adapter.poojaList.size() == 0)) {
+                        if ((adapter.poojaList.isEmpty())) {
                             binding.txNoResult.setVisibility(View.VISIBLE);
                         } else {
                             binding.txNoResult.setVisibility(GONE);
@@ -95,11 +96,16 @@ public class PoojaFragment extends Fragment {
         adapter.setData(poojaBookList, new onPoojaItemClick() {
             @Override
             public void onItemClick(int pos, PoojaBookModel poojaBookModel) {
-                Gson gson = new Gson();
-                String poojaJson = gson.toJson(poojaBookModel);
-                Intent intent = new Intent(requireActivity(), BookingDetailsActivity.class);
-                intent.putExtra("poojaJson", poojaJson);
-                startActivity(intent);
+                if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+                    Gson gson = new Gson();
+                    String poojaJson = gson.toJson(poojaBookModel);
+                    Intent intent = new Intent(requireActivity(), BookingDetailsActivity.class);
+                    intent.putExtra("poojaJson", poojaJson);
+                    startActivity(intent);
+
+                } else {
+                    Utils.showLoginDialog(requireActivity(), getString(R.string.login_pooja));
+                }
             }
         });
 

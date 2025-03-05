@@ -115,7 +115,7 @@ public class UserProfileAdapter extends RecyclerView.Adapter<UserProfileAdapter.
     public void filter(String charText) {
         this.userProfiles.clear();
         // Assume no data is found initially
-        if (charText.toLowerCase(Locale.getDefault()).length() == 0) {
+        if (charText.toLowerCase(Locale.getDefault()).isEmpty()) {
             this.userProfiles.addAll(filterList);
             // Set data found to true when the search text is empty
         } else {

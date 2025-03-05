@@ -7,7 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
-import com.app.astrotalk.R;
+
 import com.app.astrotalk.databinding.ActivityPoojaBookingDetailsBinding;
 import com.app.astrotalk.model.PoojaBookModel;
 import com.google.gson.Gson;

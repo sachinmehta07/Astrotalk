@@ -20,6 +20,7 @@ public class SplashActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+
         getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.app_theme));
 
         new Handler().postDelayed(new Runnable() {
@@ -29,7 +30,7 @@ public class SplashActivity extends AppCompatActivity {
                     startActivity(new Intent(SplashActivity.this, DashboardActivity.class));
                     finish();
                 } else {
-                    startActivity(new Intent(SplashActivity.this, LoginActivity.class));
+                    startActivity(new Intent(SplashActivity.this, SignupActivity.class));
                     finish();
                 }
             }

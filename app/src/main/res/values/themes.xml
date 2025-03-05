@@ -12,4 +12,9 @@
     </style>
 
     <style name="Theme.Astrotalk" parent="Base.Theme.Astrotalk" />
+
+    <style name="Theme.MyApp" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+        <item name="android:windowLightStatusBar">true</item>  <!-- Light text in dark theme -->
+    </style>
 </resources>

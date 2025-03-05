@@ -1,12 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:padding="15dp"
     android:background="#FFFFFF"
+    android:padding="15dp"
     tools:context=".activity.SignupActivity">
+
+
+    <TextView
+        android:id="@+id/txSkip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/poppins_regular"
+        android:text="@string/underline_skip"
+        android:textSize="@dimen/_12ssp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
 
     <ImageView
         android:id="@+id/imageView"
@@ -21,18 +34,18 @@
         android:id="@+id/progressbar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="gone"
         android:progressTint="@color/app_theme"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/clMain"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/clMain"
         app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/clMain"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/clMain"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/progressbar">
@@ -54,6 +67,23 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <!-- Edit text for email -->
+
+        <EditText
+            android:id="@+id/txtName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:autofillHints=""
+            android:background="@drawable/edittext_border"
+            android:fontFamily="@font/poppins_regular"
+            android:hint="Enter your Name"
+            android:padding="12dp"
+            android:textColorHint="#808080"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textViewHeading" />
+
         <EditText
             android:id="@+id/email"
             android:layout_width="0dp"
@@ -68,7 +98,7 @@
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textViewHeading" />
+            app:layout_constraintTop_toBottomOf="@+id/txtName" />
 
         <!-- Edit text for password -->
         <EditText
@@ -81,12 +111,13 @@
             android:hint="Enter your Password"
             android:inputType="textPassword"
             android:padding="12dp"
-            android:textColorHint="#808080"
             android:textColor="@color/black"
+            android:textColorHint="#808080"
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/email" />
+
 
         <!-- Button for register with text "Register" -->
         <androidx.appcompat.widget.AppCompatButton
@@ -107,22 +138,38 @@
         <!-- ProgressBar for loading time -->
 
 
+        <TextView
+            android:id="@+id/txtHead"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_marginTop="@dimen/_20sdp"
+            android:fontFamily="@font/poppin_medium"
+            android:text="Do you already have an account ?"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_12ssp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="@+id/btnregister"
+            app:layout_constraintStart_toStartOf="@+id/btnregister"
+            app:layout_constraintTop_toBottomOf="@+id/btnregister" />
+
+
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/loginNow"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
             android:background="@drawable/btnbg"
             android:fontFamily="@font/poppins_bold"
-            android:onClick="onLoginClicked"
             android:text="Login"
             android:textAllCaps="false"
             android:textColor="@color/black"
+            android:layout_marginTop="@dimen/_8sdp"
             android:textSize="16sp"
             android:textStyle="bold"
+            android:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btnregister" />
+            app:layout_constraintTop_toBottomOf="@+id/txtHead" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
     <!-- TextView for heading -->

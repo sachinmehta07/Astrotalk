@@ -15,6 +15,8 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.app.astrotalk.R;
+import com.app.astrotalk.utils.SharedPreferenceManager;
+import com.app.astrotalk.utils.Utils;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseNetworkException;
@@ -27,7 +29,7 @@ import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
 
 public class SignupActivity extends AppCompatActivity {
-    private EditText emailTextView, passwordTextView;
+    private EditText txtName ,emailTextView, passwordTextView;
     private Button Btn;
     public ProgressBar progressbar;
     private FirebaseAuth mAuth;
@@ -53,6 +55,7 @@ public class SignupActivity extends AppCompatActivity {
         // initialising all views through id defined above
         emailTextView = findViewById(R.id.email);
         passwordTextView = findViewById(R.id.passwd);
+        txtName = findViewById(R.id.txtName);
         Btn = findViewById(R.id.btnregister);
         progressbar = findViewById(R.id.progressbar);
 
@@ -66,12 +69,30 @@ public class SignupActivity extends AppCompatActivity {
         findViewById(R.id.loginNow).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(SignupActivity.this, LoginActivity.class));
+                startActivity(new Intent(SignupActivity.this,LoginActivity.class));
+            }
+        });
+
+        findViewById(R.id.txSkip).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new
+                        Intent(SignupActivity.this,
+                        DashboardActivity.class)
+                );
             }
         });
     }
 
+
+
     private void registerNewUser() {
+
+        if(!Utils.isNetworkAvailable(this)){
+            Toast.makeText(this, R.string.no_internet_connection_found_ncheck_your_connection, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         // show the visibility of progress bar to show loading
         progressbar.setVisibility(View.VISIBLE);
 
@@ -128,10 +149,29 @@ public class SignupActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         progressbar.setVisibility(View.GONE);
                         if (task.isSuccessful()) {
-                            Toast.makeText(getApplicationContext(), "Registration successful!", Toast.LENGTH_LONG).show();
-                            // if the user created intent to login activity
-                            Intent intent = new Intent(SignupActivity.this, LoginActivity.class);
+
+
+                            // Registration successful
+                            Toast.makeText(getApplicationContext(),
+                                    "Registration successful!",
+                                    Toast.LENGTH_LONG).show();
+
+// Save user login state
+                            SharedPreferenceManager.getInstance(SignupActivity.this).setUserLoggedIn(true);
+
+// If you're collecting the user's name during registration, save it
+                            String name = ((EditText) findViewById(R.id.txtName)).getText().toString();
+                            if (!TextUtils.isEmpty(name)) {
+                                SharedPreferenceManager.getInstance(SignupActivity.this).setUserName(name);
+                            }
+
+// Take user directly to dashboard after successful registration
+                            Intent intent = new Intent(SignupActivity.this, DashboardActivity.class);
+// Clear the back stack so user can't go back to registration screen
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
+                            finish();
+
                         } else {
                             // Registration failed
                             if (task.getException() instanceof FirebaseAuthUserCollisionException) {

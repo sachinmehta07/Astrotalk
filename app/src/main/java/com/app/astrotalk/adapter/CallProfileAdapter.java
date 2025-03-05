@@ -35,7 +35,7 @@ public class CallProfileAdapter extends RecyclerView.Adapter<CallProfileAdapter.
         this.context = context;
     }
 
-    public void setData(List<AstrolgerModel> userProfiles, OnCategoryItemClick onCategoryItemClick,OnProfileClick onProfileClick) {
+    public void setData(List<AstrolgerModel> userProfiles, OnCategoryItemClick onCategoryItemClick, OnProfileClick onProfileClick) {
         this.userProfiles = userProfiles;
         this.onCategoryItemClick = onCategoryItemClick;
         this.onProfileClick = onProfileClick;
@@ -117,7 +117,7 @@ public class CallProfileAdapter extends RecyclerView.Adapter<CallProfileAdapter.
     public void filter(String charText) {
         this.userProfiles.clear();
         // Assume no data is found initially
-        if (charText.toLowerCase(Locale.getDefault()).length() == 0) {
+        if (charText.toLowerCase(Locale.getDefault()).isEmpty()) {
             this.userProfiles.addAll(filterList);
             // Set data found to true when the search text is empty
         } else {

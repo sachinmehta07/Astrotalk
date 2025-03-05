@@ -43,6 +43,7 @@ import com.app.astrotalk.listeners.OnCategoryItemClick;
 import com.app.astrotalk.model.AstrolgerModel;
 import com.app.astrotalk.model.UserReviewModel;
 import com.app.astrotalk.utils.Utils;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -235,7 +236,7 @@ public class HomeFragment extends Fragment {
                     binding.ivMic.setVisibility(View.INVISIBLE);
 
                     if (vedicCategoryAdapter != null && careerCategoryAdapter != null && loveCategoryAdapter != null && marriageCategoryAdapter != null) {
-                        if ((vedicCategoryAdapter.homeList.size() == 0 && careerCategoryAdapter.homeList.size() == 0) && (loveCategoryAdapter.homeList.size() == 0 && marriageCategoryAdapter.homeList.size() == 0)) {
+                        if ((vedicCategoryAdapter.homeList.isEmpty() && careerCategoryAdapter.homeList.isEmpty()) && (loveCategoryAdapter.homeList.isEmpty() && marriageCategoryAdapter.homeList.isEmpty())) {
                             binding.txNoResult.setVisibility(View.VISIBLE);
                             binding.txtVedicAstrology.setVisibility(GONE);
                             binding.txtLoveAstrology.setVisibility(GONE);
@@ -355,69 +356,46 @@ public class HomeFragment extends Fragment {
 
     }
 
+    private void visitProfile(AstrolgerModel astrologer) {
+
+        Gson gson = new Gson();
+        String userReviewsJson = gson.toJson(astrologer.getUserReviews());
+        Intent intent = new Intent(requireActivity(), ProfileActivity.class);
+        intent.putExtra("profilePicUrl", astrologer.getImageD()); // Replace with the actual URL
+        intent.putExtra("name", astrologer.getName());
+        intent.putExtra("astrologyType", astrologer.getAstroType());
+        intent.putExtra("experience", astrologer.getAstroExp());
+        intent.putExtra("language", astrologer.getAstroLang());
+        intent.putExtra("aboutAstrology", astrologer.getAstroAbout());
+        intent.putExtra("userReviewsJson", userReviewsJson);
+        intent.putExtra("Address", astrologer.getAddress());
+        intent.putExtra("phoneNumber", astrologer.getPhoneNumber());
+        intent.putExtra("userId", String.valueOf(astrologer.getId()));
+        // Start the ProfileActivity
+        startActivity(intent);
+
+
+    }
+
 
     private void setData() {
+
         vedicCategoryAdapter.setData(VedicAstroList, new OnCategoryItemClick() {
             @Override
             public void onItemClick(int position, AstrolgerModel astrologer) {
-                Gson gson = new Gson();
-
-                String userReviewsJson = gson.toJson(astrologer.getUserReviews());
-                Intent intent = new Intent(requireActivity(), ProfileActivity.class);
-                intent.putExtra("profilePicUrl", astrologer.getImageD()); // Replace with the actual URL
-                intent.putExtra("name", astrologer.getName());
-                intent.putExtra("astrologyType", astrologer.getAstroType());
-                intent.putExtra("experience", astrologer.getAstroExp());
-                intent.putExtra("language", astrologer.getAstroLang());
-                intent.putExtra("aboutAstrology", astrologer.getAstroAbout());
-                intent.putExtra("userReviewsJson", userReviewsJson);
-                intent.putExtra("Address", astrologer.getAddress());
-                intent.putExtra("phoneNumber", astrologer.getPhoneNumber());
-                intent.putExtra("userId", String.valueOf(astrologer.getId()));
-                // Start the ProfileActivity
-                startActivity(intent);
+                visitProfile(astrologer);
             }
         });
         marriageCategoryAdapter.setData(marriageAstroList, new OnCategoryItemClick() {
             @Override
             public void onItemClick(int position, AstrolgerModel astrologer) {
-
-                Gson gson = new Gson();
-                String userReviewsJson = gson.toJson(astrologer.getUserReviews());
-                Intent intent = new Intent(requireActivity(), ProfileActivity.class);
-                intent.putExtra("profilePicUrl", astrologer.getImageD()); // Replace with the actual URL
-                intent.putExtra("name", astrologer.getName());
-                intent.putExtra("astrologyType", astrologer.getAstroType());
-                intent.putExtra("experience", astrologer.getAstroExp());
-                intent.putExtra("language", astrologer.getAstroLang());
-                intent.putExtra("aboutAstrology", astrologer.getAstroAbout());
-                intent.putExtra("userReviewsJson", userReviewsJson);
-                intent.putExtra("Address", astrologer.getAddress());
-                intent.putExtra("phoneNumber", astrologer.getPhoneNumber());
-                intent.putExtra("userId", String.valueOf(astrologer.getId()));
-                // Start the ProfileActivity
-                startActivity(intent);
+                visitProfile(astrologer);
             }
         });
         careerCategoryAdapter.setData(careerAstroList, new OnCategoryItemClick() {
             @Override
             public void onItemClick(int position, AstrolgerModel astrologer) {
-
-                Gson gson = new Gson();
-                String userReviewsJson = gson.toJson(astrologer.getUserReviews());
-                Intent intent = new Intent(requireActivity(), ProfileActivity.class);
-                intent.putExtra("profilePicUrl", astrologer.getImageD()); // Replace with the actual URL
-                intent.putExtra("name", astrologer.getName());
-                intent.putExtra("astrologyType", astrologer.getAstroType());
-                intent.putExtra("experience", astrologer.getAstroExp());
-                intent.putExtra("language", astrologer.getAstroLang());
-                intent.putExtra("aboutAstrology", astrologer.getAstroAbout());
-                intent.putExtra("userReviewsJson", userReviewsJson);
-                intent.putExtra("Address", astrologer.getAddress());
-                intent.putExtra("phoneNumber", astrologer.getPhoneNumber());
-                intent.putExtra("userId", String.valueOf(astrologer.getId()));
-                // Start the ProfileActivity
-                startActivity(intent);
+                visitProfile(astrologer);
             }
         });
 
@@ -425,21 +403,9 @@ public class HomeFragment extends Fragment {
             @Override
             public void onItemClick(int position, AstrolgerModel astrologer) {
 
-                Gson gson = new Gson();
-                String userReviewsJson = gson.toJson(astrologer.getUserReviews());
-                Intent intent = new Intent(requireActivity(), ProfileActivity.class);
-                intent.putExtra("profilePicUrl", astrologer.getImageD()); // Replace with the actual URL
-                intent.putExtra("name", astrologer.getName());
-                intent.putExtra("astrologyType", astrologer.getAstroType());
-                intent.putExtra("experience", astrologer.getAstroExp());
-                intent.putExtra("language", astrologer.getAstroLang());
-                intent.putExtra("aboutAstrology", astrologer.getAstroAbout());
-                intent.putExtra("userReviewsJson", userReviewsJson);
-                intent.putExtra("Address", astrologer.getAddress());
-                intent.putExtra("phoneNumber", astrologer.getPhoneNumber());
-                intent.putExtra("userId", String.valueOf(astrologer.getId()));
-                // Start the ProfileActivity
-                startActivity(intent);
+                visitProfile(astrologer);
+
+
             }
         });
 

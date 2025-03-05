@@ -12,4 +12,8 @@
         <item name="android:windowDisablePreview">true</item>
         <item name="android:statusBarColor">@color/app_theme</item>
     </style>
+    <style name="Theme.MyApp" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+        <item name="android:windowLightStatusBar">true</item>  <!-- Light text in dark theme -->
+    </style>
 </resources>

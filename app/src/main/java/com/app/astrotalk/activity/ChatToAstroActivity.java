@@ -242,7 +242,6 @@ public class ChatToAstroActivity extends AppCompatActivity {
 
     private String getSpecificResponse(String keyword) {
         // Map specific responses for each keyword and their variations
-        // You can customize this based on your app's logic
 
         // Convert keyword to lowercase for case-insensitive comparison
         keyword = keyword.toLowerCase();

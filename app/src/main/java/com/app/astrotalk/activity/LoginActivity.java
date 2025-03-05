@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.app.astrotalk.R;
 import com.app.astrotalk.utils.SharedPreferenceManager;
+import com.app.astrotalk.utils.Utils;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -46,8 +47,11 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-// taking instance of FirebaseAuth
+
+    // taking instance of FirebaseAuth
+
         mAuth = FirebaseAuth.getInstance();
+
         getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.app_theme));
 
         // initialising all views through id defined above
@@ -63,30 +67,46 @@ public class LoginActivity extends AppCompatActivity {
                 loginUserAccount();
             }
         });
+
         findViewById(R.id.signupNow).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(LoginActivity.this, SignupActivity.class));
             }
         });
+
         findViewById(R.id.txSkip).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(LoginActivity.this, DashboardActivity.class));
+                startActivity(new
+                        Intent(LoginActivity.this,
+                        DashboardActivity.class)
+                );
             }
         });
 
     }
 
     private void loginUserAccount() {
+
+        if(!Utils.isNetworkAvailable(this)){
+            Toast.makeText(this, R.string.no_internet_connection_found_ncheck_your_connection, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         // show the visibility of progress bar to show loading
+
         progressbar.setVisibility(View.VISIBLE);
 
         // Take the value of two edit texts in Strings
         String email, password, name;
+
         email = emailTextView.getText().toString();
+
         password = passwordTextView.getText().toString();
+
         name = ((EditText) findViewById(R.id.txtName)).getText().toString();
+
         // Check for empty email and password
 
         if (email.isEmpty() && password.isEmpty() && name.isEmpty()) {
@@ -96,6 +116,7 @@ public class LoginActivity extends AppCompatActivity {
                     .show();
             // hide the progress bar
             progressbar.setVisibility(View.GONE);
+
             return;
         }
 
@@ -152,6 +173,7 @@ public class LoginActivity extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
+
                                     Toast.makeText(getApplicationContext(),
                                                     "Login successful!!",
                                                     Toast.LENGTH_LONG)
@@ -166,6 +188,7 @@ public class LoginActivity extends AppCompatActivity {
                                     SharedPreferenceManager.getInstance(LoginActivity.this).setUserName(String.valueOf(((EditText) findViewById(R.id.txtName)).getText()));
                                     Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
                                     startActivity(intent);
+
                                 } else {
                                     // sign-in failed
                                     // Sign-in failed

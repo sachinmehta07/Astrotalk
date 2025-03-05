@@ -2,18 +2,32 @@ package com.app.astrotalk.fragmments;
 
 import static android.view.View.GONE;
 
+import android.Manifest;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.app.astrotalk.R;
 import com.app.astrotalk.activity.ChatToAstroActivity;
@@ -26,11 +40,20 @@ import com.app.astrotalk.listeners.OnProfileClick;
 import com.app.astrotalk.model.AstrolgerModel;
 import com.app.astrotalk.model.UserReviewModel;
 import com.app.astrotalk.utils.Utils;
+import com.google.firebase.Firebase;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.gson.Gson;
+
+import org.jitsi.meet.sdk.BroadcastEvent;
+import org.jitsi.meet.sdk.JitsiMeetActivity;
+import org.jitsi.meet.sdk.JitsiMeetConferenceOptions;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
+
+import timber.log.Timber;
 
 public class ChatFragment extends Fragment {
     private FragmentChatBinding binding;
@@ -84,7 +107,7 @@ public class ChatFragment extends Fragment {
                     userProfileAdapter.filter(cs.toString());
                     binding.ivRemove.setVisibility(View.VISIBLE);
                     if (userProfileAdapter != null)
-                        if ((userProfileAdapter.userProfiles.size() == 0)) {
+                        if ((userProfileAdapter.userProfiles.isEmpty())) {
                             binding.txNoResult.setVisibility(View.VISIBLE);
                         } else {
                             binding.txNoResult.setVisibility(GONE);
@@ -113,14 +136,23 @@ public class ChatFragment extends Fragment {
         userProfileAdapter = new UserProfileAdapter(requireActivity());
 
         Collections.shuffle(allUserBase);
+
         userProfileAdapter.setData(allUserBase, new OnCategoryItemClick() {
             @Override
             public void onItemClick(int position, AstrolgerModel astrologer) {
-                Intent iNxt = new Intent(requireActivity(), ChatToAstroActivity.class);
-                iNxt.putExtra("profilePicUrl", astrologer.getImageD());
-                iNxt.putExtra("name", astrologer.getName());
-                iNxt.putExtra("userId", String.valueOf(astrologer.getId()));
-                startActivity(iNxt);
+
+                if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+                    Intent iNxt = new Intent(requireActivity(), ChatToAstroActivity.class);
+                    iNxt.putExtra("profilePicUrl", astrologer.getImageD());
+                    iNxt.putExtra("name", astrologer.getName());
+                    iNxt.putExtra("userId", String.valueOf(astrologer.getId()));
+                    startActivity(iNxt);
+                } else {
+                    // here i want to show this dialog
+                    Utils.showLoginDialog(requireActivity(), getString(R.string.login_chat));
+                }
+
+
             }
         }, new OnProfileClick() {
             @Override
@@ -211,18 +243,18 @@ public class ChatFragment extends Fragment {
 
         // Adding the data to the careerAstroList
         allUserBase.add(new AstrolgerModel(11, "Seema", R.drawable.astro_f_c_6, "Career Astrologer", "8 years of experience", "English, Telugu", "Seema, with 8 years of experience, is a Career Astrologer proficient in English and Telugu. She is an expert in skill development predictions.", "Hyderabad, Telangana, India", Utils.careerAstroPhoneNumberDummy, careerAstroListReview));
-       allUserBase.add(new AstrolgerModel(12, "Sita", R.drawable.astro_f_3, "Career Astrologer", "3 years of experience", "Hindi, Kannada", "Sita, a Career Astrologer with 3 years of practice, excels in Hindi and Kannada. She specializes in education and academic predictions.", "Bangalore, Karnataka, India", Utils.careerAstroPhoneNumberDummy, careerAstroListReview));
-       allUserBase.add(new AstrolgerModel(13, "Sayam", R.drawable.atstro_c_2, "Career Astrologer", "3 years of experience", "Hindi, Kannada", "Sayam is a Career Astrologer with 3 years of experience, fluent in Hindi and Kannada. He specializes in education and academic predictions.", "Bangalore, Karnataka, India", Utils.careerAstroPhoneNumberDummy, careerAstroListReview));
+        allUserBase.add(new AstrolgerModel(12, "Sita", R.drawable.astro_f_3, "Career Astrologer", "3 years of experience", "Hindi, Kannada", "Sita, a Career Astrologer with 3 years of practice, excels in Hindi and Kannada. She specializes in education and academic predictions.", "Bangalore, Karnataka, India", Utils.careerAstroPhoneNumberDummy, careerAstroListReview));
+        allUserBase.add(new AstrolgerModel(13, "Sayam", R.drawable.atstro_c_2, "Career Astrologer", "3 years of experience", "Hindi, Kannada", "Sayam is a Career Astrologer with 3 years of experience, fluent in Hindi and Kannada. He specializes in education and academic predictions.", "Bangalore, Karnataka, India", Utils.careerAstroPhoneNumberDummy, careerAstroListReview));
 
 
         // Adding the data to the marriageAstroList
-             allUserBase.add(new AstrolgerModel(19, "Pooja", R.drawable.astro_m_f_7, "Marriage Astrologer", "4 years of experience", "Gujarati, Hindi", "Pooja is a Marriage Astrologer with 4 years of experience, proficient in Gujarati and Hindi. She is an expert in resolving marital conflicts.", "Ahmedabad, Gujarat, India", Utils.marriageAstroPhoneNumberDummy, marriageAstroListReview));
-       allUserBase.add(new AstrolgerModel(20, "Arun", R.drawable.astro_m_5, "Marriage Astrologer", "9 years of experience", "Hindi, Tamil", "Arun is a Marriage Astrologer with 9 years of experience, fluent in Hindi and Tamil. He specializes in Kundli matching.", "Chennai, Tamil Nadu, India", Utils.marriageAstroPhoneNumberDummy, marriageAstroListReview));
-       allUserBase.add(new AstrolgerModel(21, "Arun", R.drawable.astro_m_6, "Marriage Astrologer", "9 years of experience", "Hindi, Tamil", "Arun is a Marriage Astrologer with 9 years of experience, fluent in Hindi and Tamil. He specializes in Kundli matching.", "Chennai, Tamil Nadu, India", Utils.marriageAstroPhoneNumberDummy, marriageAstroListReview));
-       allUserBase.add(new AstrolgerModel(22, "Jinal", R.drawable.astro_m_f_8, "Marriage Astrologer", "9 years of experience", "Hindi, Tamil", "Jinal is a Marriage Astrologer with 9 years of experience, proficient in Hindi and Tamil. She specializes in Kundli matching.", "Chennai, Tamil Nadu, India", Utils.marriageAstroPhoneNumberDummy, marriageAstroListReview));
+        allUserBase.add(new AstrolgerModel(19, "Pooja", R.drawable.astro_m_f_7, "Marriage Astrologer", "4 years of experience", "Gujarati, Hindi", "Pooja is a Marriage Astrologer with 4 years of experience, proficient in Gujarati and Hindi. She is an expert in resolving marital conflicts.", "Ahmedabad, Gujarat, India", Utils.marriageAstroPhoneNumberDummy, marriageAstroListReview));
+        allUserBase.add(new AstrolgerModel(20, "Arun", R.drawable.astro_m_5, "Marriage Astrologer", "9 years of experience", "Hindi, Tamil", "Arun is a Marriage Astrologer with 9 years of experience, fluent in Hindi and Tamil. He specializes in Kundli matching.", "Chennai, Tamil Nadu, India", Utils.marriageAstroPhoneNumberDummy, marriageAstroListReview));
+        allUserBase.add(new AstrolgerModel(21, "Arun", R.drawable.astro_m_6, "Marriage Astrologer", "9 years of experience", "Hindi, Tamil", "Arun is a Marriage Astrologer with 9 years of experience, fluent in Hindi and Tamil. He specializes in Kundli matching.", "Chennai, Tamil Nadu, India", Utils.marriageAstroPhoneNumberDummy, marriageAstroListReview));
+        allUserBase.add(new AstrolgerModel(22, "Jinal", R.drawable.astro_m_f_8, "Marriage Astrologer", "9 years of experience", "Hindi, Tamil", "Jinal is a Marriage Astrologer with 9 years of experience, proficient in Hindi and Tamil. She specializes in Kundli matching.", "Chennai, Tamil Nadu, India", Utils.marriageAstroPhoneNumberDummy, marriageAstroListReview));
 
         // Adding the data to the loveAstroList
-         allUserBase.add(new AstrolgerModel(26, "Piyush", R.drawable.astro_l_4, "Love Astrologer", "7 years of experience", "English, Punjabi", "Piyush is a Love Astrologer with 7 years of experience, proficient in English and Punjabi. He specializes in love horoscope analysis.", "Chandigarh, Punjab, India", Utils.loveAstroPhoneNumberDummy, loveListAstroReview));
+        allUserBase.add(new AstrolgerModel(26, "Piyush", R.drawable.astro_l_4, "Love Astrologer", "7 years of experience", "English, Punjabi", "Piyush is a Love Astrologer with 7 years of experience, proficient in English and Punjabi. He specializes in love horoscope analysis.", "Chandigarh, Punjab, India", Utils.loveAstroPhoneNumberDummy, loveListAstroReview));
         allUserBase.add(new AstrolgerModel(27, "Aditya", R.drawable.astro_l_5, "Love Astrologer", "3 years of experience", "Hindi, Tamil", "Aditya is a Love Astrologer with 3 years of experience, fluent in Hindi and Tamil. He is an expert in love compatibility predictions.", "Chennai, Tamil Nadu, India", Utils.loveAstroPhoneNumberDummy, loveListAstroReview));
         allUserBase.add(new AstrolgerModel(28, "Preeti", R.drawable.astro_l_f_6, "Love Astrologer", "8 years of experience", "Gujarati, English", "Preeti is a Love Astrologer with 8 years of experience, proficient in Gujarati and English. She specializes in love and romance predictions.", "Ahmedabad, Gujarat, India", Utils.loveAstroPhoneNumberDummy, loveListAstroReview));
         allUserBase.add(new AstrolgerModel(29, "Ritika", R.drawable.astro_l_f_7, "Love Astrologer", "8 years of experience", "Gujarati, English", "Ritika is a Love Astrologer with 8 years of experience, proficient in Gujarati and English. She specializes in love and romance predictions.", "Ahmedabad, Gujarat, India", Utils.loveAstroPhoneNumberDummy, loveListAstroReview));
@@ -234,4 +266,5 @@ public class ChatFragment extends Fragment {
         super.onDestroyView();
         binding = null; // Release the binding when the view is destroyed
     }
+
 }
