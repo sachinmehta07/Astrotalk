@@ -41,12 +41,25 @@
     <string name="empty_msg">Start by booking your first Pooja session to begin your spiritual journey.</string>
     <string name="cancel_booking">Cancel booking</string>
     <string name="are_you_sure_you_want_to_cancel">Are you sure you want to cancel?</string>
-    <string name="enter_room_name">Enter Room Name</string>
-    <string name="create_room_or_join_room">Create Room or Join Room</string>
+    <string name="enter_room_name">Enter Session Name</string>
+    <string name="create_room_or_join_room">Create or Join Session</string>
     <string name="hello">hello</string>
     <string name="sign_in_login">Sign in / Login</string>
     <string name="login_chat">Login to Chat with Astrologers</string>
     <string name="login_call">Login to call with Astrologers</string>
     <string name="login_pooja">Login to Book Pooja</string>
-
+    <string name="select_call_type">Select Call Type</string>
+    <string name="imp_msg">Before You Start the Session🤳</string>
+    <string name="imp_notice">
+    Step 1 : Save the astrologer\'s number in WhatsApp or send them a message.&#10; \n
+        \n
+    Step 2 : Once the call starts, invite them by sharing the Session link.&#10;\n
+        \n
+    Step 3 : You can share the link via WhatsApp or any other social platform.
+</string>
+    <string name="audio_call">Audio Call 📞</string>
+    <string name="video_call">Video Call 🤳</string>
+    <string name="msg_empty_num">Not able to get number</string>
+    <string name="please_follow_below_instruction">Please Follow below instruction</string>
+    <string name="start_video_session">Start Video Session</string>
 </resources>

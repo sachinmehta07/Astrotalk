@@ -1,65 +1,161 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:background="@drawable/dialog_bg"
-    android:orientation="vertical"
-    android:padding="16dp">
-
-    <TextView
-        android:id="@+id/text_title"
-        android:layout_width="match_parent"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/dialog_bg"
-        android:fontFamily="@font/poppins_bold"
-        android:gravity="center"
-        android:text="@string/create_room_or_join_room"
-        android:textColor="@android:color/black"
-        android:textSize="@dimen/_13ssp" />
+        android:orientation="vertical"
+        android:padding="16dp">
 
-    <EditText
-        android:id="@+id/edEnterRoomName"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_10sdp"
-        android:background="@drawable/edittext_border"
-        android:fontFamily="@font/poppins_regular"
-        android:gravity="center"
-        android:hint="@string/enter_room_name"
-        android:paddingVertical="@dimen/_5sdp"
-        android:textColor="@android:color/black"
-        android:textSize="@dimen/_15ssp"
-        android:textStyle="bold" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_15sdp"
-        android:gravity="center"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/btn_yes"
-            android:layout_width="wrap_content"
+        <TextView
+            android:id="@+id/txvImp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/_15sdp"
-            android:background="@drawable/btnbg"
+            android:layout_marginBottom="@dimen/_10sdp"
             android:fontFamily="@font/poppins_bold"
-            android:text="Call"
+            android:gravity="center"
+            android:text="Important"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/_12ssp" />
+
+        <TextView
+            android:id="@+id/txvSteps"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/_10sdp"
+            android:fontFamily="@font/poppins_bold"
+            android:gravity="center"
+            android:padding="5dp"
+            android:text="Please Follow below instruction"
             android:textColor="@android:color/black"
             android:textSize="@dimen/_10ssp" />
 
-        <Button
-            android:id="@+id/btn_no"
-            android:layout_width="wrap_content"
+        <TextView
+            android:id="@+id/text_instruction"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/_15sdp"
-            android:background="@drawable/btnbg"
-            android:fontFamily="@font/poppins_bold"
-            android:text="No"
+            android:layout_marginBottom="@dimen/_10sdp"
+            android:background="@drawable/edittext_border"
+            android:fontFamily="@font/poppins_regular"
+            android:padding="10dp"
+            android:text="@string/imp_notice"
+            android:textAlignment="textStart"
             android:textColor="@android:color/black"
-            android:textSize="@dimen/_10ssp"
-            android:visibility="gone" />
+            android:textSize="@dimen/_10ssp" />
+
+
+        <TextView
+            android:id="@+id/txvNotice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/_10sdp"
+            android:fontFamily="@font/poppins_bold"
+            android:gravity="center"
+            android:padding="5dp"
+            android:text="@string/imp_msg"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/_10ssp" />
+
+        <TextView
+            android:id="@+id/txvPhoneNumber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:fontFamily="@font/poppins_regular"
+            android:padding="10dp"
+            android:textAlignment="center"
+            android:background="@drawable/edittext_border"
+            android:text="+1234567890"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/_12ssp" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:gravity="center"
+            android:layout_marginBottom="@dimen/_10sdp">
+
+            <Button
+                android:id="@+id/btnSaveContact"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/btnbg"
+                android:fontFamily="@font/poppins_bold"
+                android:text="Save number"
+                android:drawableEnd="@drawable/save_ic"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/_10ssp" />
+
+            <Button
+                android:id="@+id/btnWhatsApp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/btnbg"
+                android:fontFamily="@font/poppins_bold"
+                android:text="WhatsApp"
+                android:layout_marginStart="@dimen/_10sdp"
+                android:drawableEnd="@drawable/whatsapp_ic"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/_10ssp" />
+        </LinearLayout>
+
+
+        <TextView
+            android:id="@+id/text_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/dialog_bg"
+            android:fontFamily="@font/poppins_bold"
+            android:gravity="center"
+            android:text="@string/create_room_or_join_room"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/_13ssp" />
+
+        <EditText
+            android:id="@+id/edEnterRoomName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:background="@drawable/edittext_border"
+            android:fontFamily="@font/poppins_regular"
+            android:gravity="center"
+            android:hint="@string/enter_room_name"
+            android:paddingVertical="@dimen/_5sdp"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/_15ssp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_15sdp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btn_yes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/_15sdp"
+                android:background="@drawable/btnbg"
+                android:fontFamily="@font/poppins_bold"
+                android:text="Start Video calling"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/_10ssp" />
+
+            <Button
+                android:id="@+id/btn_no"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_15sdp"
+                android:background="@drawable/btnbg"
+                android:fontFamily="@font/poppins_bold"
+                android:text="No"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/_10ssp"
+                android:visibility="gone" />
+
+        </LinearLayout>
 
     </LinearLayout>
-
-</LinearLayout>

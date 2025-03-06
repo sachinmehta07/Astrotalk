@@ -1,6 +1,7 @@
 package com.app.astrotalk.fragmments;
 
 import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -22,6 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -37,6 +39,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import com.app.astrotalk.R;
 import com.app.astrotalk.activity.DashboardActivity;
 import com.app.astrotalk.activity.ProfileActivity;
+import com.app.astrotalk.activity.VideoCallingActivity;
 import com.app.astrotalk.adapter.CallProfileAdapter;
 import com.app.astrotalk.databinding.FragmentCallBinding;
 import com.app.astrotalk.listeners.OnCategoryItemClick;
@@ -71,6 +74,11 @@ public class CallFragment extends Fragment {
     List<AstrolgerModel> allUserBase = new ArrayList<>();
     private final List<UserReviewModel> UserReviewBaseDataList = new ArrayList<>();
     private ActivityResultLauncher<String[]> requestPermissionLauncher;
+
+    private String nameUser = "";
+
+    private String getPhoneNumber;
+    private String astrologerName = "";
 
 
     public CallFragment() {
@@ -107,14 +115,14 @@ public class CallFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         setData();
         initialization();
-        setDataVideoCall();
+        // setDataVideoCall();
         // Register the permission request launcher
         requestPermissionLauncher = registerForActivityResult(
                 new ActivityResultContracts.RequestMultiplePermissions(),
                 resultMap -> {
                     if (resultMap.get(Manifest.permission.CAMERA) == Boolean.TRUE && resultMap.get(Manifest.permission.RECORD_AUDIO) == Boolean.TRUE) {
                         // Permissions granted, proceed with video call
-                        showCallDialog();
+                        showCallDialog(nameUser);
                     } else {
                         // Permission denied, inform user
                         Toast.makeText(requireActivity(), "Permission denied", Toast.LENGTH_SHORT).show();
@@ -165,7 +173,9 @@ public class CallFragment extends Fragment {
             @SuppressLint("QueryPermissionsNeeded")
             @Override
             public void onItemClick(int position, AstrolgerModel astrologer) {
-//                phoneNumber = astrologer.getPhoneNumber();
+                nameUser = astrologer.getName();
+//                getPhoneNumber = astrologer.getPhoneNumber();
+                phoneNumber = astrologer.getPhoneNumber();
 //                if (requireActivity().checkSelfPermission(Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
 //                    // Permission is granted, proceed with the call
 //
@@ -178,16 +188,18 @@ public class CallFragment extends Fragment {
 //                    requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, REQUEST_CALL_PERMISSION);
 //                }
 
-                if(!Utils.isNetworkAvailable(requireActivity())){
+                if (!Utils.isNetworkAvailable(requireActivity())) {
                     Toast.makeText(requireActivity(), R.string.no_internet_connection_found_ncheck_your_connection, Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 if (FirebaseAuth.getInstance().getCurrentUser() != null) {
                     if (checkPermissions()) {
-                        showCallDialog();
+                        showCallDialog(astrologer.getName());
                     } else {
+
                         requestPermissions();
+
                     }
                 } else {
 
@@ -203,6 +215,7 @@ public class CallFragment extends Fragment {
 
                 if (FirebaseAuth.getInstance().getCurrentUser() != null) {
                     Gson gson = new Gson();
+                    nameUser = astrologer.getName();
 
                     String userReviewsJson = gson.toJson(astrologer.getUserReviews());
                     Intent intent = new Intent(requireActivity(), ProfileActivity.class);
@@ -232,27 +245,27 @@ public class CallFragment extends Fragment {
         binding.rvUsersChat.setAdapter(userProfileAdapter);
     }
 
-    private void setDataVideoCall() {
-        URL serverURL;
-        try {
-            // When using JaaS, replace "https://meet.jit.si" with the proper serverURL
-            serverURL = new URL("https://meet.jit.si");
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-            throw new RuntimeException("Invalid server URL!");
-        }
-        JitsiMeetConferenceOptions defaultOptions = new JitsiMeetConferenceOptions.Builder().setServerURL(serverURL)
-                // When using JaaS, set the obtained JWT here
-                //.setToken("MyJWT")
-                // Different features flags can be set
-                // .setFeatureFlag("toolbox.enabled", false)
-                // .setFeatureFlag("filmstrip.enabled", false)
-
-                .setFeatureFlag("welcomepage.enabled", false).build();
-        JitsiMeet.setDefaultConferenceOptions(defaultOptions);
-        registerForBroadcastMessages();
-
-    }
+//    private void setDataVideoCall() {
+//        URL serverURL;
+//        try {
+//            // When using JaaS, replace "https://meet.jit.si" with the proper serverURL
+//            serverURL = new URL("https://meet.jit.si");
+//        } catch (MalformedURLException e) {
+//            e.printStackTrace();
+//            throw new RuntimeException("Invalid server URL!");
+//        }
+//        JitsiMeetConferenceOptions defaultOptions = new JitsiMeetConferenceOptions.Builder().setServerURL(serverURL)
+//                // When using JaaS, set the obtained JWT here
+//                //.setToken("MyJWT")
+//                // Different features flags can be set
+//                // .setFeatureFlag("toolbox.enabled", false)
+//                // .setFeatureFlag("filmstrip.enabled", false)
+//
+//                .setFeatureFlag("welcomepage.enabled", false).build();
+//        JitsiMeet.setDefaultConferenceOptions(defaultOptions);
+//        registerForBroadcastMessages();
+//
+//    }
 
     public void setData() {
 
@@ -413,73 +426,138 @@ public class CallFragment extends Fragment {
 //        }
 //    }
 
-    private void handlePermissionResult(Map<String, Boolean> resultMap) {
-        if (resultMap.get(Manifest.permission.CAMERA) == Boolean.TRUE &&
-                resultMap.get(Manifest.permission.RECORD_AUDIO) == Boolean.TRUE) {
-            // Permissions granted, proceed with video call
-            Log.d("TAG", "onRequestPermissionsResult: ");
-            showCallDialog();
-        } else {
-            // Permission denied, inform user or request permissions again
-            Toast.makeText(requireActivity(), "Permission denied", Toast.LENGTH_SHORT).show();
-            // If you want to request permissions again, call requestPermissions() here
-        }
-    }
+//    private void handlePermissionResult(Map<String, Boolean> resultMap) {
+//        if (resultMap.get(Manifest.permission.CAMERA) == Boolean.TRUE &&
+//                resultMap.get(Manifest.permission.RECORD_AUDIO) == Boolean.TRUE) {
+//            // Permissions granted, proceed with video call
+//            Log.d("TAG", "onRequestPermissionsResult: ");
+//            showCallDialog();
+//        } else {
+//            // Permission denied, inform user or request permissions again
+//            Toast.makeText(requireActivity(), "Permission denied", Toast.LENGTH_SHORT).show();
+//            // If you want to request permissions again, call requestPermissions() here
+//        }
+//    }
 
-    private void showCallDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+//    private void showCallDialog() {
+//
+//
+//        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+//        LayoutInflater inflater = getLayoutInflater();
+//        View dialogView = inflater.inflate(R.layout.calling_dialog, null);
+//        builder.setView(dialogView);
+//
+//        EditText editText = dialogView.findViewById(R.id.edEnterRoomName);
+//
+//
+//// Create the dialog instance
+//        AlertDialog dialog = builder.create();
+//
+//// Now you can access the dialog's window and set its background
+//        Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+//        dialogView.setBackgroundResource(R.drawable.dialog_bg);
+//
+//        Button btnYes = dialogView.findViewById(R.id.btn_yes);
+//
+//        btnYes.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                String text = editText.getText().toString();
+//                if (!text.isEmpty()) {
+//                    if (text.length() >= 4) {
+//                        setCall(text);
+//                        if (dialog.isShowing()) {
+//                            dialog.dismiss();
+//                        }
+//                    } else {
+//                        Toast.makeText(requireActivity(), "Please Enter Minimum 4 character", Toast.LENGTH_SHORT).show();
+//                    }
+//
+//                } else {
+//                    Toast.makeText(requireActivity(), "Enter the room name please", Toast.LENGTH_SHORT).show();
+//                }
+//
+//            }
+//        });
+//        // Show the dialog
+//        dialog.show();
+//
+//    }
+
+//    public void setCall(String roomName) {
+//        if (roomName.length() > 0) {
+//            // Build options object for joining the conference. The SDK will merge the default
+//            // one we set earlier and this one when joining.
+//            JitsiMeetConferenceOptions options = new JitsiMeetConferenceOptions.Builder().setRoom(roomName)
+//                    // Settings for audio and video
+//                    .setFeatureFlag("welcomepage.enabled", false).setAudioMuted(true).setVideoMuted(true).build();
+//            // Launch the new activity with the given options. The launch() method takes care
+//            // of creating the required Intent and passing the options.
+//            JitsiMeetActivity.launch(requireActivity(), options);
+//
+//        }
+//    }
+
+    public void showCallDialog(String name) {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
         LayoutInflater inflater = getLayoutInflater();
-        View dialogView = inflater.inflate(R.layout.calling_dialog, null);
+        View dialogView = inflater.inflate(R.layout.dialog_exit, null);
         builder.setView(dialogView);
 
-        EditText editText = dialogView.findViewById(R.id.edEnterRoomName);
+        TextView title = dialogView.findViewById(R.id.text_title);
+        TextView txvPhoneNum = dialogView.findViewById(R.id.txvPhoneNum);
+        TextView txvPhone = dialogView.findViewById(R.id.txvPhone);
 
+        txvPhoneNum.setVisibility(VISIBLE);
+        txvPhone.setVisibility(VISIBLE);
+
+        txvPhoneNum.setText(String.format("Contact : %s", name));
+        txvPhone.setText(phoneNumber);
+
+        title.setText(R.string.select_call_type);
 
 // Create the dialog instance
-        AlertDialog dialog = builder.create();
+        final AlertDialog dialog = builder.create();
 
 // Now you can access the dialog's window and set its background
         Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialogView.setBackgroundResource(R.drawable.dialog_bg);
 
         Button btnYes = dialogView.findViewById(R.id.btn_yes);
+        btnYes.setText(R.string.audio_call);
+        Button btnNo = dialogView.findViewById(R.id.btn_no);
+        btnNo.setText(R.string.video_call);
 
         btnYes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String text = editText.getText().toString();
-                if (!text.isEmpty()) {
-                    if (text.length() >= 4) {
-                        setCall(text);
-                        if (dialog.isShowing()) {
-                            dialog.dismiss();
-                        }
-                    } else {
-                        Toast.makeText(requireActivity(), "Please Enter Minimum 4 character", Toast.LENGTH_SHORT).show();
-                    }
+                makePhoneCall(phoneNumber);
+            }
+        });
 
-                } else {
-                    Toast.makeText(requireActivity(), "Enter the room name please", Toast.LENGTH_SHORT).show();
-                }
-
+        btnNo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                dialog.dismiss();
+//                showVideoCallDialog();
+                Intent iNxt = new Intent(requireActivity(), VideoCallingActivity.class);
+                iNxt.putExtra("phoneNumber", phoneNumber);
+                iNxt.putExtra("name", nameUser);
+                startActivity(iNxt);
             }
         });
         // Show the dialog
         dialog.show();
-
     }
 
-    public void setCall(String roomName) {
-        if (roomName.length() > 0) {
-            // Build options object for joining the conference. The SDK will merge the default
-            // one we set earlier and this one when joining.
-            JitsiMeetConferenceOptions options = new JitsiMeetConferenceOptions.Builder().setRoom(roomName)
-                    // Settings for audio and video
-                    .setFeatureFlag("welcomepage.enabled", false).setAudioMuted(true).setVideoMuted(true).build();
-            // Launch the new activity with the given options. The launch() method takes care
-            // of creating the required Intent and passing the options.
-            JitsiMeetActivity.launch(requireActivity(), options);
-
+    private void makePhoneCall(String phoneNumber) {
+        if (phoneNumber != null && !phoneNumber.isEmpty()) {
+            Intent callIntent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + phoneNumber));
+            startActivity(callIntent);
+        } else {
+            Toast.makeText(requireActivity(), "Phone number is not available", Toast.LENGTH_SHORT).show();
         }
     }
 }

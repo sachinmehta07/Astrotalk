@@ -1,6 +1,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:background="@drawable/dialog_bg"
     android:padding="16dp">
@@ -11,6 +12,31 @@
         android:layout_height="wrap_content"
         android:text="Are you sure you want to exit?"
         android:textSize="@dimen/_13ssp"
+        android:background="@drawable/dialog_bg"
+        android:fontFamily="@font/poppins_regular"
+        android:textColor="@android:color/black"
+        android:textStyle="bold"
+        android:gravity="center"/>
+
+    <TextView
+        android:id="@+id/txvPhoneNum"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/_12ssp"
+        android:visibility="gone"
+        android:background="@drawable/dialog_bg"
+        android:fontFamily="@font/poppins_regular"
+        android:textColor="@android:color/black"
+        android:textStyle="bold"
+        android:gravity="center"/>
+
+    <TextView
+        android:id="@+id/txvPhone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        tools:ignore="99999999999"
+        android:textSize="@dimen/_10ssp"
         android:background="@drawable/dialog_bg"
         android:fontFamily="@font/poppins_regular"
         android:textColor="@android:color/black"
