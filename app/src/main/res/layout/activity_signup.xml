@@ -101,22 +101,50 @@
             app:layout_constraintTop_toBottomOf="@+id/txtName" />
 
         <!-- Edit text for password -->
-        <EditText
-            android:id="@+id/passwd"
+<!--        <EditText-->
+<!--            android:id="@+id/passwd"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginTop="16dp"-->
+<!--            android:background="@drawable/edittext_border"-->
+<!--            android:fontFamily="@font/poppins_regular"-->
+<!--            android:hint="Enter your Password"-->
+<!--            android:inputType="textPassword"-->
+<!--            android:padding="12dp"-->
+<!--            android:textColor="@color/black"-->
+<!--            android:textColorHint="#808080"-->
+<!--            android:textSize="16sp"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/email" />-->
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/passwordLayout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:background="@drawable/edittext_border"
-            android:fontFamily="@font/poppins_regular"
-            android:hint="Enter your Password"
-            android:inputType="textPassword"
-            android:padding="12dp"
-            android:textColor="@color/black"
-            android:textColorHint="#808080"
-            android:textSize="16sp"
+            app:passwordToggleEnabled="false"
+            app:passwordToggleTint="#808080"
+            app:hintEnabled="false"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/email" />
+            app:layout_constraintTop_toBottomOf="@+id/email">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/edittext_border"
+                android:fontFamily="@font/poppins_regular"
+                android:hint="@string/enter_your_password"
+                android:inputType="textPassword"
+                android:padding="12dp"
+                android:textColor="@color/black"
+                android:textColorHint="#808080"
+                android:textSize="16sp" />
+
+        </com.google.android.material.textfield.TextInputLayout>
 
 
         <!-- Button for register with text "Register" -->
@@ -133,7 +161,7 @@
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/passwd" />
+            app:layout_constraintTop_toBottomOf="@+id/passwordLayout" />
 
         <!-- ProgressBar for loading time -->
 
@@ -142,7 +170,6 @@
             android:id="@+id/txtHead"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
             android:layout_marginTop="@dimen/_20sdp"
             android:fontFamily="@font/poppin_medium"
             android:text="Do you already have an account ?"

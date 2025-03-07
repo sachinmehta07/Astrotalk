@@ -365,50 +365,50 @@ public class CallFragment extends Fragment {
         requestPermissionLauncher.launch(new String[]{Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO});
     }
 
-    private void registerForBroadcastMessages() {
-        IntentFilter intentFilter = new IntentFilter();
+//    private void registerForBroadcastMessages() {
+//        IntentFilter intentFilter = new IntentFilter();
+//
+//        /* This registers for every possible event sent from JitsiMeetSDK
+//           If only some of the events are needed, the for loop can be replaced
+//           with individual statements:
+//           ex:  intentFilter.addAction(BroadcastEvent.Type.AUDIO_MUTED_CHANGED.getAction());
+//                intentFilter.addAction(BroadcastEvent.Type.CONFERENCE_TERMINATED.getAction());
+//                ... other events
+//         */
+//        for (BroadcastEvent.Type type : BroadcastEvent.Type.values()) {
+//            intentFilter.addAction(type.getAction());
+//        }
+//
+//        LocalBroadcastManager.getInstance(requireActivity()).registerReceiver(broadcastReceiver, intentFilter);
+//    }
+//
+//    private void onBroadcastReceived(Intent intent) {
+//        if (intent != null) {
+//            BroadcastEvent event = new BroadcastEvent(intent);
+//
+//            switch (event.getType()) {
+//                case CONFERENCE_JOINED:
+//                    Timber.i("Conference Joined with url%s", event.getData().get("url"));
+//                    break;
+//                case PARTICIPANT_JOINED:
+//                    Timber.i("Participant joined%s", event.getData().get("name"));
+//                    break;
+//            }
+//        }
+//    }
 
-        /* This registers for every possible event sent from JitsiMeetSDK
-           If only some of the events are needed, the for loop can be replaced
-           with individual statements:
-           ex:  intentFilter.addAction(BroadcastEvent.Type.AUDIO_MUTED_CHANGED.getAction());
-                intentFilter.addAction(BroadcastEvent.Type.CONFERENCE_TERMINATED.getAction());
-                ... other events
-         */
-        for (BroadcastEvent.Type type : BroadcastEvent.Type.values()) {
-            intentFilter.addAction(type.getAction());
-        }
+//    private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+//        @Override
+//        public void onReceive(Context context, Intent intent) {
+//            onBroadcastReceived(intent);
+//        }
+//    };
 
-        LocalBroadcastManager.getInstance(requireActivity()).registerReceiver(broadcastReceiver, intentFilter);
-    }
-
-    private void onBroadcastReceived(Intent intent) {
-        if (intent != null) {
-            BroadcastEvent event = new BroadcastEvent(intent);
-
-            switch (event.getType()) {
-                case CONFERENCE_JOINED:
-                    Timber.i("Conference Joined with url%s", event.getData().get("url"));
-                    break;
-                case PARTICIPANT_JOINED:
-                    Timber.i("Participant joined%s", event.getData().get("name"));
-                    break;
-            }
-        }
-    }
-
-    private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            onBroadcastReceived(intent);
-        }
-    };
-
-    @Override
-    public void onDestroy() {
-        LocalBroadcastManager.getInstance(requireActivity()).unregisterReceiver(broadcastReceiver);
-        super.onDestroy();
-    }
+//    @Override
+//    public void onDestroy() {
+//        LocalBroadcastManager.getInstance(requireActivity()).unregisterReceiver(broadcastReceiver);
+//        super.onDestroy();
+//    }
 
 
 //    @Override

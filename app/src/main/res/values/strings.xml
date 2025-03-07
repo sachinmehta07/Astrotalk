@@ -62,4 +62,5 @@
     <string name="msg_empty_num">Not able to get number</string>
     <string name="please_follow_below_instruction">Please Follow below instruction</string>
     <string name="start_video_session">Start Video Session</string>
+    <string name="enter_your_password">Enter your Password</string>
 </resources>

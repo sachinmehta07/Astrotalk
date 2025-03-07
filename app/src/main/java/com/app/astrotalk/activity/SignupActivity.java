@@ -4,10 +4,13 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Patterns;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -29,9 +32,10 @@ import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
 
 public class SignupActivity extends AppCompatActivity {
-    private EditText txtName ,emailTextView, passwordTextView;
+    private EditText txtName, emailTextView, passwordEditText;
     private Button Btn;
     public ProgressBar progressbar;
+    private boolean passwordVisible = false;
     private FirebaseAuth mAuth;
 
     //    @Override
@@ -54,7 +58,7 @@ public class SignupActivity extends AppCompatActivity {
 
         // initialising all views through id defined above
         emailTextView = findViewById(R.id.email);
-        passwordTextView = findViewById(R.id.passwd);
+        passwordEditText = findViewById(R.id.password);
         txtName = findViewById(R.id.txtName);
         Btn = findViewById(R.id.btnregister);
         progressbar = findViewById(R.id.progressbar);
@@ -69,7 +73,7 @@ public class SignupActivity extends AppCompatActivity {
         findViewById(R.id.loginNow).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(SignupActivity.this,LoginActivity.class));
+                startActivity(new Intent(SignupActivity.this, LoginActivity.class));
             }
         });
 
@@ -82,13 +86,80 @@ public class SignupActivity extends AppCompatActivity {
                 );
             }
         });
+
+        setupPasswordToggle();
     }
 
+    @SuppressLint("ClickableViewAccessibility")
+    private void setupPasswordToggle() {
+        // Set the drawable for password visibility toggle (eye icon)
+        final int hidePasswordIcon = R.drawable.ic_visibility_off; // Eye closed icon
+
+        // Initially set the hide password icon (eye with line through it)
+        passwordEditText.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, hidePasswordIcon, 0);
+
+        // Handle touch events on the EditText
+        passwordEditText.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                // Check if touch was on the right side (where the icon is)
+                final int DRAWABLE_RIGHT = 2;
+
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    if (passwordEditText.getCompoundDrawables()[DRAWABLE_RIGHT] != null &&
+                            event.getRawX() >= (passwordEditText.getRight() -
+                                    passwordEditText.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width() -
+                                    passwordEditText.getPaddingRight())) {
+
+                        // Call performClick to handle accessibility properly
+                        v.performClick();
+
+                        // Toggle password visibility
+                        togglePasswordVisibility();
+                        return true;
+                    }
+                }
+                return false;
+            }
+        });
+
+        // Override performClick to handle accessibility
+        passwordEditText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // This will be called by accessibility services
+                // The actual toggle logic is in togglePasswordVisibility()
+            }
+        });
+    }
+
+    // Separate method for toggling password visibility
+    private void togglePasswordVisibility() {
+        passwordVisible = !passwordVisible;
+
+        final int showPasswordIcon = R.drawable.ic_visibility; // Eye open icon
+        final int hidePasswordIcon = R.drawable.ic_visibility_off; // Eye closed icon
+
+        if (passwordVisible) {
+            // Show password
+            passwordEditText.setInputType(InputType.TYPE_CLASS_TEXT |
+                    InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+            passwordEditText.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, showPasswordIcon, 0);
+        } else {
+            // Hide password
+            passwordEditText.setInputType(InputType.TYPE_CLASS_TEXT |
+                    InputType.TYPE_TEXT_VARIATION_PASSWORD);
+            passwordEditText.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, hidePasswordIcon, 0);
+        }
+
+        // Move cursor to end of text
+        passwordEditText.setSelection(passwordEditText.getText().length());
+    }
 
 
     private void registerNewUser() {
 
-        if(!Utils.isNetworkAvailable(this)){
+        if (!Utils.isNetworkAvailable(this)) {
             Toast.makeText(this, R.string.no_internet_connection_found_ncheck_your_connection, Toast.LENGTH_SHORT).show();
             return;
         }
@@ -99,7 +170,7 @@ public class SignupActivity extends AppCompatActivity {
         // Take the value of two edit texts in Strings
         String email, password;
         email = emailTextView.getText().toString();
-        password = passwordTextView.getText().toString();
+        password = passwordEditText.getText().toString();
 
         // Check for empty email or password
         if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password)) {

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -28,7 +29,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-
     <ProgressBar
         android:id="@+id/progressbar"
         android:layout_width="wrap_content"
@@ -40,7 +40,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/clMain"
         android:layout_width="match_parent"
@@ -50,8 +49,6 @@
         app:layout_constraintTop_toBottomOf="@+id/progressbar">
 
         <!-- TextView for heading -->
-
-
         <TextView
             android:id="@+id/textViewHeading"
             android:layout_width="wrap_content"
@@ -59,7 +56,6 @@
             android:layout_marginTop="16dp"
             android:layout_marginBottom="24dp"
             android:fontFamily="@font/poppin_medium"
-
             android:text="Login"
             android:textColor="@color/black"
             android:textSize="24sp"
@@ -67,7 +63,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
 
         <!-- Edit text for name -->
         <EditText
@@ -86,7 +81,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textViewHeading" />
 
-
         <!-- Edit text for email -->
         <EditText
             android:id="@+id/email"
@@ -104,7 +98,36 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/txtName" />
 
-        <!-- Edit text for password -->
+        <!-- OPTION 1: Using TextInputLayout for password with toggle -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/passwordLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            app:passwordToggleEnabled="false"
+            app:passwordToggleTint="#808080"
+            app:hintEnabled="false"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/email">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/edittext_border"
+                android:fontFamily="@font/poppins_regular"
+                android:hint="@string/enter_your_password"
+                android:inputType="textPassword"
+                android:padding="12dp"
+                android:textColor="@color/black"
+                android:textColorHint="#808080"
+                android:textSize="16sp" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- OPTION 2: Alternative method using regular EditText with drawable (commented out) -->
+        <!--
         <EditText
             android:id="@+id/password"
             android:layout_width="0dp"
@@ -118,9 +141,12 @@
             android:textColor="@color/black"
             android:textColorHint="#808080"
             android:textSize="16sp"
+            android:drawableEnd="@drawable/ic_password_toggle"
+            android:drawablePadding="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/email" />
+        -->
 
         <!-- Button for Login with text "Login" -->
         <androidx.appcompat.widget.AppCompatButton
@@ -136,8 +162,7 @@
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/password" />
-
+            app:layout_constraintTop_toBottomOf="@+id/passwordLayout" />
 
         <TextView
             android:id="@+id/txtHead"
@@ -152,7 +177,6 @@
             app:layout_constraintEnd_toEndOf="@+id/login"
             app:layout_constraintStart_toStartOf="@+id/login"
             app:layout_constraintTop_toBottomOf="@+id/login" />
-
 
         <!-- Button for Sign Up with text "new User" -->
         <androidx.appcompat.widget.AppCompatButton
@@ -171,6 +195,5 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/txtHead" />
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

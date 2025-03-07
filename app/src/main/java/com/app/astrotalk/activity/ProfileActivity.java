@@ -324,11 +324,11 @@ public class ProfileActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onDestroy() {
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver);
-        super.onDestroy();
-    }
+//    @Override
+//    protected void onDestroy() {
+//        LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver);
+//        super.onDestroy();
+//    }
 
 //    private void showVideoCallDialog() {
 //        AlertDialog.Builder builder = new AlertDialog.Builder(this);
